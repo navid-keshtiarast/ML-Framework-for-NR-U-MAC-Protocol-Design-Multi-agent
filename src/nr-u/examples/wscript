@@ -1,0 +1,15 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    obj = bld.create_ns3_program('cttc-nr-wigig-interference', ['nr', 'nr-u', 'wifi-80211ad-nist', 'flow-monitor', 'stats'])
+    obj.source = [
+          'cttc-nr-wigig-interference.cc',
+                 ]
+    obj = bld.create_ns3_program('cttc-nr-wifi-interference', ['nr', 'nr-u', 'wifi', 'flow-monitor', 'stats'])
+    obj.source = [
+          'cttc-nr-wifi-interference.cc',
+                 ]
+    obj = bld.create_ns3_program('cttc-coexistence-indoor-scenario', ['nr', 'nr-u', 'wifi-80211ad-nist', 'flow-monitor', 'stats'])
+    obj.source = [
+          'cttc-coexistence-indoor-scenario.cc',
+                 ]
