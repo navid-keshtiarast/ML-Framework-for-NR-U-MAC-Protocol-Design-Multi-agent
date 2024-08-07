@@ -183,6 +183,11 @@ sim_config = {
     'isEvaluation' : False,
     'new_udpLambda' : my_udpLambda,
     'output_dir' : my_output_dir,
+    'alpha' : my_alpha,
+    'beta' : my_beta,
+    'min_num_aps' : my_min_num_aps,
+    'max_num_aps' : my_max_num_aps,
+    'simRoundSet' : my_sim_seed_set,
 }
 
 

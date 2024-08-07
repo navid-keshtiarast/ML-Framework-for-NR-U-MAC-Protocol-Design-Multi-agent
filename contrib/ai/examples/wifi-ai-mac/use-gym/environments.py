@@ -631,7 +631,7 @@ class CentralDecisionWifiEnv (gym.Env):
         if self.done == True :
             self.ns3Settings['simRound'] = np.random.randint(1,1000)
             if self.isEvaluation == True :
-            	self.ns3Settings['simRound'] = self.sim_round_set[self.epsNumber]
+                self.ns3Settings['simRound'] = self.sim_round_set[self.epsNumber]
                 self.epsNumber += 1
             if self.ns3Settings['customEpisode'] == False :
                 self.ns3Settings['numAgents'] = np.random.randint(low=self.min_ap_interval,high=self.max_ap_interval) 
@@ -1109,8 +1109,8 @@ class MultiAgentDecisionWifiEnv (MultiAgentEnv):
             self.random_order = random.sample(range(4), 4)
             self.ns3Settings['simRound'] = np.random.randint(1,1000) 
             if self.isEvaluation == True :
-            	self.ns3Settings['simRound'] = self.sim_round_set[self.epsNumber]
-            	self.epsNumber += 1
+                self.ns3Settings['simRound'] = self.sim_round_set[self.epsNumber]
+                self.epsNumber += 1
             if self.ns3Settings['customEpisode'] == False :
                 self.ns3Settings['numAgents'] = np.random.randint(low=self.min_ap_interval,high=self.max_ap_interval) 
                 self.num_ap = self.ns3Settings['numAgents']
