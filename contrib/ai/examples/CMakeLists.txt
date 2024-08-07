@@ -1,0 +1,6 @@
+add_subdirectory(a-plus-b)
+add_subdirectory(rate-control)
+add_subdirectory(rl-tcp)
+add_subdirectory(lte-cqi)
+add_subdirectory(nr-ai-mac)
+add_subdirectory(wifi-ai-mac)
