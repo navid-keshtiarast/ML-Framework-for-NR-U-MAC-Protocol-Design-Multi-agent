@@ -443,7 +443,7 @@ class CentralDecisionEnv (gym.Env):
         
         print("Debugging CentralEnv create dummyEnv")
         self.dummyEnv = Ns3Env(targetName="ns3ai_nrmac_gym",
-            ns3Path="/home/inets/Desktop/A/ns-allinone-3.38/ns-3.38/", ns3Settings=ns3Settings, envNumber = self.envNumber)
+            ns3Path="../../../../../", ns3Settings=ns3Settings, envNumber = self.envNumber)
 
         self.observation = self.observation_space.sample()
 
@@ -870,7 +870,7 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
         )
 
         self.dummyEnv = Ns3Env(targetName="ns3ai_nrmac_gym",
-            ns3Path="/home/inets/Desktop/A/ns-allinone-3.38/ns-3.38/", ns3Settings=ns3Settings, envNumber = self.envNumber)
+            ns3Path="../../../../../", ns3Settings=ns3Settings, envNumber = self.envNumber)
 
         self.observation = {i : self.observation_space[i].sample() for i in range (self.max_num_aps)} 
         # self.reset_obs_space()
