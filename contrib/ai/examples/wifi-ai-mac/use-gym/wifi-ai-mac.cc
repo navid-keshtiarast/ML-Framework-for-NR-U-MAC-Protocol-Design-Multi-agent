@@ -177,43 +177,12 @@ void readPathLoss (std::string pathlossDir, uint32_t numApStaPairs, NodeContaine
                 filenameIndexAp << pathlossDir << "Scenario4/apIndex_" << simRound << ".txt";
                 filenameStaSta << pathlossDir << "Scenario4/pathlossMatrixUeUe_" << simRound << ".txt";
             }
-            if (scenarioId == 5)
-            {
-                filenameApAp << pathlossDir << "Scenario5/pathlossMatrixGnbGnb.txt";
-                filenameApSta << pathlossDir << "Scenario5/pathlossMatrixGnbUe_" << simRound << ".txt";
-                filenameIndexAp << pathlossDir << "Scenario5/apIndex_" << simRound << ".txt";
-                filenameStaSta << pathlossDir << "Scenario5/pathlossMatrixUeUe_" << simRound << ".txt";
-            }
-            if (scenarioId == 6)
-            {
-                filenameApAp << pathlossDir << "Scenario6/pathlossMatrixGnbGnb.txt";
-                filenameApSta << pathlossDir << "Scenario6/pathlossMatrixGnbUe_" << simRound << ".txt";
-                filenameIndexAp << pathlossDir << "Scenario6/apIndex_" << simRound << ".txt";
-                filenameStaSta << pathlossDir << "Scenario6/pathlossMatrixUeUe_" << simRound << ".txt";
-            }
             if (scenarioId == 0)
             {
                 filenameApAp << pathlossDir << "Tim/pathlossMatrixGnbGnb.txt";
                 filenameApSta << pathlossDir << "Tim/pathlossMatrixGnbUe.txt";
                 filenameIndexAp << pathlossDir << "Tim/apIndex.txt";
                 filenameStaSta << pathlossDir << "Tim/pathlossMatrixUeUe.txt";
-            }
-        }
-        if (scenarioType == 2)
-        {
-            if (scenarioId == 1)
-            {
-                filenameApAp << pathlossDir << "onlyLOS/pathlossMatrixGnbGnb.txt";
-                filenameApSta << pathlossDir << "onlyLOS/pathlossMatrixGnbUe_" << simRound << ".txt";
-                filenameIndexAp << pathlossDir << "onlyLOS/apIndex_" << simRound << ".txt";
-                filenameStaSta << pathlossDir << "onlyLOS/pathlossMatrixUeUe_" << simRound << ".txt";
-            }
-            if (scenarioId == 2)
-            {
-                filenameApAp << pathlossDir << "notOnlyLOS/pathlossMatrixGnbGnb.txt";
-                filenameApSta << pathlossDir << "notOnlyLOS/pathlossMatrixGnbUe_" << simRound << ".txt";
-                filenameIndexAp << pathlossDir << "notOnlyLOS/apIndex_" << simRound << ".txt";
-                filenameStaSta << pathlossDir << "notOnlyLOS/pathlossMatrixUeUe_" << simRound << ".txt";
             }
         }
 
@@ -1202,13 +1171,12 @@ main (int argc, char *argv[])
     double simTime = 2.0; // seconds
     double ueX = 1.0; // meters
     std::string simTag = "default";
-    std::string outputDir = "./";
     bool enableNr = false;
     bool enableWifi = true;
     bool doubleTechnology = false;
     bool positioning = true;
 
-    std::string pathlossDir = "/home/inets/Desktop/A/ns-allinone-3.38/ns-3.38/freespacePL/"; //main directory where pathloss Matrix is stored
+    std::string pathlossDir = "../../../../../freespacePL/"; //main directory where pathloss Matrix is stored
 
     //Physical parameters
     bool cellScan = true;
@@ -1333,8 +1301,6 @@ main (int argc, char *argv[])
         targetDataRateVector[i] = targetDataRate;
         fragmentSizeVector[i] = fragmentSize;
     }  
-
-    std::stringstream outputDirAutomatic;
 
     NS_LOG_DEBUG ("Create base stations and mobile terminals");
     NodeContainer allWirelessNodes;
@@ -2283,9 +2249,6 @@ main (int argc, char *argv[])
 
     Packet::EnablePrinting ();
 
-    //SqliteOutputManager manager (outputDir, numWifiPairs, outputDir + ss.str (), ss.str (), seed, numNruPairs, simRound);
-    //outputManager = &manager;
-    
     NS_LOG_DEBUG("Create channel configuration");
     //Create and configure spectrumChannel
     Ptr<SpectrumChannel> spectrumChannel;

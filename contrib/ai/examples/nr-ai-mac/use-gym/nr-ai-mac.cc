@@ -1237,7 +1237,7 @@ main (int argc, char *argv[])
     bool doubleTechnology = false;
     bool positioning = true;
 
-    std::string pathlossDir = "/home/inets/Desktop/A/ns-allinone-3.38/ns-3.38/freespacePL/"; //main directory where pathloss Matrix is stored
+    std::string pathlossDir = "../../../../../freespacePL/"; //main directory where pathloss Matrix is stored
 
     //Physical parameters
     bool cellScan = true;
@@ -1362,8 +1362,6 @@ main (int argc, char *argv[])
         targetDataRateVector[i] = targetDataRate;
         fragmentSizeVector[i] = fragmentSize;
     }  
-
-    std::stringstream outputDirAutomatic;
 
     NS_LOG_DEBUG ("Create base stations and mobile terminals");
     NodeContainer allWirelessNodes;
@@ -2119,33 +2117,6 @@ main (int argc, char *argv[])
                 filenameIndexAp << pathlossDir << "Scenario4/apIndex_" << simRound << ".txt";
                 filenamePosSta << pathlossDir << "Scenario4/ueCoordinates_" << simRound << ".txt";
             }
-            if (scenarioId == 5)
-            {
-                filenamePosAp << pathlossDir << "Scenario5/gNbLayoutMatrix.txt";
-                filenameIndexAp << pathlossDir << "Scenario5/apIndex_" << simRound << ".txt";
-                filenamePosSta << pathlossDir << "Scenario5/ueCoordinates_" << simRound << ".txt";
-            }
-            if (scenarioId == 6)
-            {
-                filenamePosAp << pathlossDir << "Scenario6/gNbLayoutMatrix.txt";
-                filenameIndexAp << pathlossDir << "Scenario6/apIndex_" << simRound << ".txt";
-                filenamePosSta << pathlossDir << "Scenario6/ueCoordinates_" << simRound << ".txt";
-            }
-        }
-        if (scenarioType == 2)
-        {
-            if (scenarioId == 1)
-            {
-                filenamePosAp << pathlossDir << "onlyLOS/gNbLayoutMatrix.txt";
-                filenameIndexAp << pathlossDir << "onlyLOS/apIndex_" << simRound << ".txt";
-                filenamePosSta << pathlossDir << "onlyLOS/ueCoordinates_" << simRound << ".txt";
-            }
-            if (scenarioId == 2)
-            {
-                filenamePosAp << pathlossDir << "notOnlyLOS/gNbLayoutMatrix.txt";
-                filenameIndexAp << pathlossDir << "notOnlyLOS/apIndex_" << simRound << ".txt";
-                filenamePosSta << pathlossDir << "notOnlyLOS/ueCoordinates_" << simRound << ".txt";
-            }
         }
 
         std::ifstream inFile;
@@ -2305,9 +2276,6 @@ main (int argc, char *argv[])
     std::cout << "Number of gNb nodes : "<< gnbNodesNum << std::endl;
 
     Packet::EnablePrinting ();
-
-    //SqliteOutputManager manager (outputDir, numWifiPairs, outputDir + ss.str (), ss.str (), seed, numNruPairs, simRound);
-    //outputManager = &manager;
     
     NS_LOG_DEBUG("Create channel configuration");
     //Create and configure spectrumChannel
