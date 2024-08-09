@@ -91,7 +91,7 @@ c. DTDE scenario
 ```bash
 cd contrib/ai/examples/wifi-ai-mac/use-gym
 python3 run_wifi_mac.py --agent multi --separate_agent_nns
-
+```
 
 ### Possible Errors
 
