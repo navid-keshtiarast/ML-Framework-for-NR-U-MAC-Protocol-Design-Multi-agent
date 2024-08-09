@@ -47,6 +47,29 @@ a. CTCE scenario
 
 ```bash
 cd contrib/ai/examples/wifi-ai-mac/use-gym
+python3 run_wifi_mac.py --agent central
+```
+
+b. CTDE scenario
+
+```bash
+cd contrib/ai/examples/wifi-ai-mac/use-gym
+python3 run_wifi_mac.py --agent multi
+```
+
+c. DTDE scenario
+
+```bash
+cd contrib/ai/examples/wifi-ai-mac/use-gym
+python3 run_wifi_mac.py --agent multi --separate_agent_nns
+```
+
+2. Inserting trained policies for evaluation 
+
+a. CTCE scenario
+
+```bash
+cd contrib/ai/examples/wifi-ai-mac/use-gym
 python3 evaluation.py --agent central --outputDir "YOUR_OUTPUT_DIR" --rllibDir "YOUR_RAY_CHECKPOINT"
 ```
 
@@ -69,29 +92,6 @@ python3 evaluation.py --agent multi --separate_agent_nns --outputDir "YOUR_OUTPU
 ```
 
 Note : "YOUR_RAY_CHECKPOINT" is by default saved in home/user/ray_results/, e.g. home/user/ray_results/PPO_2024-08-05_23-22-17
-
-3. Inserting trained policies for evaluation 
-
-a. CTCE scenario
-
-```bash
-cd contrib/ai/examples/wifi-ai-mac/use-gym
-python3 run_wifi_mac.py --agent central
-```
-
-b. CTDE scenario
-
-```bash
-cd contrib/ai/examples/wifi-ai-mac/use-gym
-python3 run_wifi_mac.py --agent multi
-```
-
-c. DTDE scenario
-
-```bash
-cd contrib/ai/examples/wifi-ai-mac/use-gym
-python3 run_wifi_mac.py --agent multi --separate_agent_nns
-```
 
 ### Possible Errors
 
