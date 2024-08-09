@@ -10,19 +10,27 @@ https://www.nsnam.org/wiki/Installation
 
 2. Boost C++ libraries
 
+```bash
 sudo apt install libboost-all-dev
+```
 
 3. Protocol buffers
 
+```bash
 sudo apt install libprotobuf-dev protobuf-compiler
+```
 
 4. pybind11
 
+```bash
 sudo apt install pybind11-dev
+```
 
 5. Ray RLlib 2.11.0
 
+```bash
 pip install -U "ray[data,train,tune,serve]==2.11.0"
+```
 
 6. Configure and build the ns-3 library
 
