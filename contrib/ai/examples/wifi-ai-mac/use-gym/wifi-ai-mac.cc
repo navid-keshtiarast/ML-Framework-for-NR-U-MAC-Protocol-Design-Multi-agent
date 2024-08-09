@@ -1984,8 +1984,7 @@ main (int argc, char *argv[])
 
     std::stringstream SimTag;
     SimTag << "_" << numWifiPairs << "_" << numNruPairs << "_" << frameAggregation << "_" << simRound << "_" << gnbCamType;
-    RngSeedManager::SetSeed (seed);
-    RngSeedManager::SetRun (300 + simRound);
+    RngSeedManager::SetSeed (simRound);
     ConfigureDefaultValues (cellScan, beamSearchAngleStep, errorModel, cat2EDThreshold, cat3and4EDThreshold, rlcModel,SimTag.str());
 
     //Setting wifi standard
