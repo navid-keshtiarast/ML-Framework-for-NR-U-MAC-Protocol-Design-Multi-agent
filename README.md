@@ -103,7 +103,7 @@ In order to implement the NR-AI-MAC module, we make use and modify the following
 ## References 
 If you use this module in your research, please cite:
 
-N. Keshtiarast, O. Renaldi and M. Petrova, "Wireless MAC Protocol Synthesis and Optimization With Multi-Agent Distributed Reinforcement Learning," in IEEE Networking Letters, doi: 10.1109/LNET.2024.3503289.  [Bibtex available here](https://ieeexplore.ieee.org/document/10758702) 
+N. Keshtiarast, O. Renaldi and M. Petrova, "Wireless MAC Protocol Synthesis and Optimization With Multi-Agent Distributed Reinforcement Learning," in IEEE Networking Letters, doi: 10.1109/LNET.2024.3503289.  Bibtex available [here](https://ieeexplore.ieee.org/document/10758702). 
 
 ## Future work
 We are actively developing new features integrating reinforment learning to ns-3, including:
