@@ -121,19 +121,21 @@ If you use this module in your research, please cite:
 M. Mezzavilla, M. Zhang, M. Polese, R. Ford, S. Dutta, S. Rangan, M. Zorzi, _"End-to-End Simulation of 5G mmWave Networks,"_ in IEEE Communications Surveys & Tutorials, vol. 20, no. 3, pp. 2237-2263, thirdquarter 2018. [bibtex available here](https://ieeexplore.ieee.org/document/8344116/)
 
 ## Future work
-We are actively developing new features for the mmWave module, including:
-- 3GPP NR beam tracking
-- 3GPP NR Integrated Access and Backhaul feature (see [this repo](https://github.com/signetlabdei/ns3-mmwave-iab) for more details)
+We are actively developing new features integrating reinforment learning to ns-3, including:
+- WIFI-AI-MAC
+- COEX-AI-MAC
 
+<!-- 
 ## About
 This module is being developed by [NYU Wireless](http://wireless.engineering.nyu.edu/) and the [University of Padova](http://mmwave.dei.unipd.it/).
 This  work  was  supported  in  part by  the  U.S.  Department  of  Commerce  National  Institute  of  Standards  and Technology through the Project “An End-to-End Research Platform for Public Safety  Communications  above  6  GHz”  under  Award  70NANB17H16.
-
+-->
 
 
 <!-- The new-handover branch offers integration between LTE and mmWave and dual connectivity features.
  -->
 
+<!-- 
 ## Authors ##
 
 The ns-3 mmWave module is the result of the development effort carried out by different people. The main contributors are: 
@@ -149,6 +151,7 @@ The ns-3 mmWave module is the result of the development effort carried out by di
 - Sourjya Dutta, NYU Wireless
 - Russell Ford, NYU Wireless
 - Gabriel Arrobo, Intel
+-->
 
 ## License ##
 
