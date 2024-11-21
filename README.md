@@ -2,14 +2,18 @@
 
 ## Introduction
 
-This repository introduces a cutting-edge Multi-Agent Deep Reinforcement Learning (MADRL) framework for designing MAC protocols for the 5G NR-U (New Radio - Unlicensed). Unlike traditional centralized approaches that depend on a single decision-making entity, our framework enables individual network nodes to autonomously learn and optimize their MAC behaviors based on local observations. This module provides a foundation for distributed multi-agent learning, empowering researchers and developers to design adaptive MAC protocols tailored to dynamic environmental conditions. A detailed description of this module can be found in [this paper](https://ieeexplore.ieee.org/document/10758702) 
+This repository introduces a cutting-edge Multi-Agent Deep Reinforcement Learning (MADRL) framework for designing MAC protocols for the 5G NR-U (New Radio - Unlicensed). Unlike traditional centralized approaches that depend on a single decision-making entity, our framework enables individual network nodes to autonomously learn and optimize their MAC behaviors based on local observations. This module provides a foundation for distributed multi-agent learning, empowering researchers and developers to design adaptive MAC protocols tailored to dynamic environmental conditions. A detailed description of this module can be found in [this paper](https://ieeexplore.ieee.org/document/10758702). 
+
+<p align="center">
+    <img src="./docs/system_concept.pdf" alt="arch" width="500"/>
+</p>
 
 ## Main Features
 
 - Enables seamless data exchange between state-of-the-art Multi-Agent reinforcement learning framework Ray RLlib and ns-3
 - Supports the simulation of NR-U and its LBT channel access mechanism
-- Facilitates custom configuration of PHY and MAC layer parameters in the NR-U (e.g. minimum contention window, slot time, defer time, TX power, etc.)
-- Enables the training of a tailor-made MAC protocol for a specific channel and traffic conditions across different RL scenario, viz. CTCE (Centralized Training Centralized Execution), CTDE (Centralized Training Distributed Execution), and DTDE (Distributed Training Distributed Execution)
+- Facilitates custom configuration of PHY and MAC layer parameters in the NR-U for specific channel and traffic conditions (e.g. minimum contention window, slot time, defer time, TX power, etc.)
+- Enables the training of a tailor-made MAC protocol across different RL scenario, viz. CTCE (Centralized Training Centralized Execution), CTDE (Centralized Training Distributed Execution), and DTDE (Distributed Training Distributed Execution)
 
 ## Installation
 
