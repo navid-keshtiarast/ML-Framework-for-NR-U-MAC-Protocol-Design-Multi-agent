@@ -79,10 +79,10 @@ b. The path to pathloss matrix in [nr-ai-mac.cc](./contrib/ai/examples/nr-ai-mac
 std::string pathlossDir = "YOUR_NS3_PATH/freespacePL/";
 ```
 
-
+<!--
 ## Documentation
-<!-- 
-The documentation of this module is available at [this link](./src/mmwave/doc/mmwave-doc.md).
+ 
+The documentation of this module is available at 
 -->
 
 ## Related modules
@@ -94,54 +94,25 @@ In order to implement the NR-AI-MAC module, we make use and modify the following
 - ns-3-vr-app is an implementation of a traffic model for AR/VR applications on ns-3. Check [ns-3-vr-app](https://github.com/signetlabdei/ns-3-vr-app) for further details.
 
 ## References 
-The following papers describe in detail the features implemented in the mmWave
-module:
-<!-- 
-- [End-to-End Simulation of 5G mmWave Networks](https://ieeexplore.ieee.org/document/8344116/ "comst paper") is a comprehensive tutorial with a detailed description of the whole module. We advise the researchers interested in this module to start reading from this paper;
-- [Integration of Carrier Aggregation and Dual Connectivity for the ns-3 mmWave Module](https://arxiv.org/abs/1802.06706 "wns3 2018") describes the Carrier Aggregation implementation;
-- [Implementation of A Spatial Channel Model for ns-3](https://arxiv.org/abs/2002.09341 "wns3 2020") describes the integration of the spatial channel model based on the 3GPP specifications TR 38.901 V15.0.0;
-- [Performance Comparison of Dual Connectivity and Hard Handover for LTE-5G Tight Integration](https://arxiv.org/abs/1607.05425 "simutools paper") describes the Dual Connectivity feature.
-
-These other papers describe features that were implemented in older releases: 
-- [ns-3 Implementation of the 3GPP MIMO Channel Model for Frequency Spectrum above 6 GHz](https://dl.acm.org/citation.cfm?id=3067678 "wns3 2017") describes the implementation of the 3GPP channel model based on TR 38.900;
-- [Multi-Sector and Multi-Panel Performance in 5G mmWave Cellular Networks](https://arxiv.org/abs/1808.04905 "globecom2018") describes the multi-sector addition to the 3GPP channel model;
--->
-
 If you use this module in your research, please cite:
 
-N. Keshtiarast, O. Renaldi and M. Petrova, "Wireless MAC Protocol Synthesis and Optimization With Multi-Agent Distributed Reinforcement Learning," in IEEE Networking Letters, doi: 10.1109/LNET.2024.3503289.  [bibtex available here](https://ieeexplore.ieee.org/document/10758702) 
+N. Keshtiarast, O. Renaldi and M. Petrova, "Wireless MAC Protocol Synthesis and Optimization With Multi-Agent Distributed Reinforcement Learning," in IEEE Networking Letters, doi: 10.1109/LNET.2024.3503289.  [Bibtex available here](https://ieeexplore.ieee.org/document/10758702) 
 
 ## Future work
 We are actively developing new features integrating reinforment learning to ns-3, including:
-- WIFI-AI-MAC
-- COEX-AI-MAC
+- WIFI-AI-MAC : Multi-Agent Deep Reinforcement Learning (MADRL) framework for MAC protocol design for Wi-Fi
+- COEX-AI-MAC : Multi-Agent Deep Reinforcement Learning (MADRL) framework for MAC protocol design for the coexistance between Wi-Fi and NR-U
 
 <!-- 
 ## About
-This module is being developed by [NYU Wireless](http://wireless.engineering.nyu.edu/) and the [University of Padova](http://mmwave.dei.unipd.it/).
-This  work  was  supported  in  part by  the  U.S.  Department  of  Commerce  National  Institute  of  Standards  and Technology through the Project “An End-to-End Research Platform for Public Safety  Communications  above  6  GHz”  under  Award  70NANB17H16.
+This module is being developed by .
+This  work  was  supported  .
 -->
-
-
-<!-- The new-handover branch offers integration between LTE and mmWave and dual connectivity features.
- -->
 
 <!-- 
 ## Authors ##
 
-The ns-3 mmWave module is the result of the development effort carried out by different people. The main contributors are: 
-- Tommaso Zugno, University of Padova
-- Michele Polese, University of Padova
-- Matteo Pagin, University of Padova
-- Mattia Lecci, University of Padova
-- Matteo Drago, University of Padova
-- Mattia Rebato, University of Padova
-- Menglei Zhang, NYU Wireless
-- Marco Giordani, University of Padova
-- Marco Mezzavilla, NYU Wireless
-- Sourjya Dutta, NYU Wireless
-- Russell Ford, NYU Wireless
-- Gabriel Arrobo, Intel
+The NR-AI-MAC module is the result of the development effort carried out by different people. The main contributors are: 
 -->
 
 ## License ##
