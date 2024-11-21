@@ -5,7 +5,7 @@
 This repository introduces a cutting-edge Multi-Agent Deep Reinforcement Learning (MADRL) framework for designing MAC protocols for the 5G NR-U (New Radio - Unlicensed). Unlike traditional centralized approaches that depend on a single decision-making entity, our framework enables individual network nodes to autonomously learn and optimize their MAC behaviors based on local observations. This module provides a foundation for distributed multi-agent learning, empowering researchers and developers to design adaptive MAC protocols tailored to dynamic environmental conditions. A detailed description of this module can be found in [this paper](https://ieeexplore.ieee.org/document/10758702). 
 
 <p align="center">
-    <img src="./docs/system_concept.png" alt="arch" width="500"/>
+    <img src="./docs/system_concept.png" alt="arch" width="1000"/>
 </p>
 
 ## Main Features
