@@ -12,7 +12,7 @@ https://www.nsnam.org/wiki/Installation
 sudo apt install libboost-all-dev
 ```
 
-3. 3. Protocol buffers
+3. Protocol buffers
 
 ```bash
 sudo apt install libprotobuf-dev protobuf-compiler
