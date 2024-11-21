@@ -98,11 +98,11 @@ The documentation of this module is available at [this link](./src/mmwave/doc/mm
 
 ## Related modules
 
-In order to implement the NR-AI-MAC module, we 
-- MilliCar is an ns-3 module for the simulation of mmWave NR V2X networks. Check [this repo](https://github.com/signetlabdei/millicar) for further details.
-- A seperate module is being developed for [mmWave UE Energy Consumption](https://github.com/arghasen10/mmwave-energy "mmwave-energy"). You can use this module for analyzing 
-Energy Consumption behaviour of mmwave UE. Check this repository for further details.
-- `ns3-mmwave-iab` is an extended version of `ns3-mmWave` adding wireless relaying capabilities to an ns-3 NetDevice, and the possibility of simulating in-band relaying at mmWave frequencies. Check [this repo](https://github.com/signetlabdei/ns3-mmwave-iab) for further details.
+In order to implement the NR-AI-MAC module, we make use and modify the following sub-modules :
+
+- nr-u is an ns-3 module for for the simulation of NR-U non-standalone cellular networks. Check [nr-u](https://gitlab.com/cttc-lena/nr-u) for further details.
+- ns3-ai is an ns-3 module to enable interaction between ns-3 and Python scripts. Check [ns3-ai](https://github.com/hust-diangroup/ns3-ai) for further details.
+- ns-3-vr-app is an implementation of a traffic model for AR/VR applications on ns-3. Check [ns-3-vr-app](https://github.com/signetlabdei/ns-3-vr-app) for further details.
 
 ## References 
 The following papers describe in detail the features implemented in the mmWave
