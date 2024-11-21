@@ -1,6 +1,6 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2018 Technische Universität Berlin
+ * Copyright (c) 2024 RWTH Aachen University
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -15,9 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Author: Piotr Gawlowicz <gawlowicz@tkn.tu-berlin.de>
- * Modify: Pengyu Liu <eic_lpy@hust.edu.cn> 
- *         Hao Yin <haoyin@uw.edu>
+ * Author: Oliver Renaldi <oliver.renaldi@rwth-aachen.de>
  */
 
 #pragma once
