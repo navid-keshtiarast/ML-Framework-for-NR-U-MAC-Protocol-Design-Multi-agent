@@ -81,8 +81,9 @@ std::string pathlossDir = "YOUR_NS3_PATH/freespacePL/";
 
 
 ## Documentation
-
+<!-- 
 The documentation of this module is available at [this link](./src/mmwave/doc/mmwave-doc.md).
+-->
 
 ## Related modules
 
