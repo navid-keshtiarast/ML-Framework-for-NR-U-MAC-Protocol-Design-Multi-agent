@@ -565,7 +565,7 @@ NrLbtAccessManager::GetEdThreshold () const
 }
 
 void
-NrLbtAccessManager::SetDeferTime (const Time& deferTime)
+NrLbtAccessManager::SetDeferTime (const Time deferTime)
 {
   m_deferTime = deferTime;
 }
@@ -583,7 +583,7 @@ NrLbtAccessManager::GetSlotTime () const
 }
 
 void
-NrLbtAccessManager::SetSlotTime (const Time& slotTime)
+NrLbtAccessManager::SetSlotTime (const Time slotTime)
 {
   m_slotTime = slotTime;
 }
@@ -595,7 +595,7 @@ NrLbtAccessManager::GetMcot () const
 }
 
 void
-NrLbtAccessManager::SetMcot (const Time& mcot)
+NrLbtAccessManager::SetMcot (const Time mcot)
 {
   m_mcot = mcot;
 }
@@ -909,30 +909,26 @@ NrCat4LbtAccessManager::DoInitialize (void)
 }
 
 void
-NrCat4LbtAccessManager::SetCat4MinCw (const uint32_t& contentionWindow)
+NrCat4LbtAccessManager::SetCat4MinCw (const uint32_t contentionWindow)
 {
-  std::cout << "Testing bug minCW " << contentionWindow << std::endl;
-  m_cat4CwMin = contentionWindow;
+  m_cat4CwMin = contentionWindow;  
 }
 
 void
-NrCat4LbtAccessManager::SetCat4MaxCw (const uint32_t& contentionWindow)
+NrCat4LbtAccessManager::SetCat4MaxCw (const uint32_t contentionWindow)
 {
-  std::cout << "Testing bug maxCW " << contentionWindow << std::endl;
   m_cat4CwMax = contentionWindow;
 }
 
 void
-NrCat4LbtAccessManager::SetCat4LinBackoff (const uint32_t& backoffConst)
+NrCat4LbtAccessManager::SetCat4LinBackoff (const uint32_t backoffConst)
 {
-  std::cout << "Testing bug BackOff Constant : " << backoffConst << std::endl;
   m_linBackoff = backoffConst;
 }
 
 void
-NrCat4LbtAccessManager::SetCat4BackoffType (const uint32_t& backoffType)
+NrCat4LbtAccessManager::SetCat4BackoffType (const uint32_t backoffType)
 {
-  std::cout << "Testing bug BackOffType : " << backoffType << std::endl;
   m_backoffType = backoffType;
 }
 
@@ -1049,7 +1045,6 @@ NrCat4LbtAccessManager::GetBackoffSlots ()
         ResetCw ();
       }
     }
-
   return m_rng->GetInteger (0, m_cat4ContentionWindowTracedValue.Get ());
 }
 

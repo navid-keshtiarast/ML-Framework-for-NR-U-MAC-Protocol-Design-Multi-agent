@@ -65,12 +65,16 @@ public:
   virtual BandwidthPartInfoPtrVector GetBwpVector () = 0;
 
   virtual void ChangeGnbTxPower (double newTxPower) = 0;
+  virtual void ChangeMcot (Time newMcot) = 0;
+  virtual void ChangeBackoffType (uint32_t newBackoffType) = 0;
+  virtual void ChangeDeferTime (Time newDeferTime) = 0;
+  virtual void ChangeMinCw (uint32_t newMinCw) = 0;
   virtual void ChangeMcs (uint32_t mcsValue) = 0;
   virtual void ChangeAmpdu (uint32_t newAmpdu) = 0;
   virtual void ChangeAmsdu (uint32_t newAmsdu) = 0;
-  virtual void ChangeEdThreshold (uint32_t newEdThreshold) = 0;
+  virtual void ChangeEdThreshold (double newEdThreshold) = 0;
   virtual void ChangeSlotTime (uint32_t newSlotTime) = 0;
-
+    
   /**
    * \brief SinrCb typedef
    * First parameter is node ID, second is the SINR value

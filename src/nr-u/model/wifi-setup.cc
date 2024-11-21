@@ -100,6 +100,21 @@ WifiSetup::WifiSetup (const NodeContainer &apNodes, const NodeContainer &staNode
 
   double MPDU=0;
   double MSDU=0;
+  if (frameaggr==0)
+    {
+      MPDU=0;
+      MSDU=0;
+    }
+  else if (frameaggr==1)
+    {
+      MPDU=6500631;//;262143;//;6500631;
+      MSDU=0;
+    }
+  else if (frameaggr==2)
+    {
+      MPDU=0;
+      MSDU=11398;//7935;//11398;
+    }
   
   MPDU = wifiMpdu*1000;
   MSDU = wifiMsdu*1000;
@@ -163,7 +178,7 @@ WifiSetup::WifiSetup (const NodeContainer &apNodes, const NodeContainer &staNode
       m_ueDev.Add (m_wifiHelper.Install (m_spectrumWifiPhyHelper, m_wifiMacHelper, *it));
     }
 
-  // m_spectrumWifiPhyHelper.SetPcapDataLinkType(SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
+  m_spectrumWifiPhyHelper.SetPcapDataLinkType(SpectrumWifiPhyHelper::DLT_IEEE802_11_RADIO);
   // m_spectrumWifiPhyHelper.EnablePcap ("wifiPcap", m_gnbDev);
   // m_spectrumWifiPhyHelper.EnablePcap ("wifiPcap", m_ueDev);
 
@@ -198,11 +213,11 @@ WifiSetup::WifiSetup (const NodeContainer &apNodes, const NodeContainer &staNode
       m_beTxop = ptr.Get<QosTxop> ();
       m_beTxop->TraceConnect ("TxopTrace", nodeId,
                              MakeCallback (&WifiSetup::ChannelRequestToAccessDuration, this));
-      // m_beTxop->SetMinCw(wifiMinCw);
-      // m_beTxop->SetAifsn(wifiAifsn);
-      // m_beTxop->SetBackoffType(wifiBackoffType);
+      m_beTxop->SetMinCw(wifiMinCw);
+      m_beTxop->SetAifsn(wifiAifsn);
+      m_beTxop->SetBackoffType(wifiBackoffType);
 
-      // apWifiPhy->SetSlot(MicroSeconds(wifiSlotTime));
+      apWifiPhy->SetSlot(MicroSeconds(wifiSlotTime));
     }
 
   for (uint32_t i = 0; i < m_ueDev.GetN (); ++i)
@@ -423,6 +438,22 @@ void WifiSetup::ChangeGnbTxPower (double newTxPower)
   }
 } 
 
+void WifiSetup::ChangeMcot (Time newMcot)
+{
+}
+
+void WifiSetup::ChangeBackoffType (uint32_t newBackoffType)
+{
+}
+
+void WifiSetup::ChangeDeferTime (Time newDeferTime)
+{
+}
+
+void WifiSetup::ChangeMinCw (uint32_t newMinCw)
+{
+}
+
 void WifiSetup::ChangeMcs (uint32_t mcsValue)
 {
   // std::cout << "Debug ChangeMcs()" << std::endl;
@@ -459,7 +490,7 @@ void WifiSetup::ChangeAmsdu (uint32_t newAmsdu)
   }
 }
 
-void WifiSetup::ChangeEdThreshold (uint32_t newEdThreshold)
+void WifiSetup::ChangeEdThreshold (double newEdThreshold)
 {
   // std::cout << "Debug ChangeEdThreshold()" << std::endl;
   for(uint32_t i = 0; i < m_gnbDev.GetN(); i++)

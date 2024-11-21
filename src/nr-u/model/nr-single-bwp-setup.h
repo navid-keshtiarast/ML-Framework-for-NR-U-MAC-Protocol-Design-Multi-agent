@@ -64,10 +64,14 @@ public:
   virtual BandwidthPartInfoPtrVector GetBwpVector () override;
 
   virtual void ChangeGnbTxPower (double newTxPower) override;
+  virtual void ChangeMcot (Time newMcot) override;
+  virtual void ChangeBackoffType (uint32_t newBackoffType) override;
+  virtual void ChangeDeferTime (Time newDeferTime) override;
+  virtual void ChangeMinCw (uint32_t newMinCw) override;
   virtual void ChangeMcs (uint32_t mcsValue) override;
   virtual void ChangeAmpdu (uint32_t newAmpdu) override;
   virtual void ChangeAmsdu (uint32_t newAmsdu) override;
-  virtual void ChangeEdThreshold (uint32_t newEdThreshold) override;
+  virtual void ChangeEdThreshold (double newEdThreshold) override;
   virtual void ChangeSlotTime (uint32_t newSlotTime) override;
 
 private:

@@ -73,6 +73,8 @@ parser.add_argument("--reward_type",
                     )
 parser.add_argument('--lstm',
                      action='store_true', help="Whether or not to use an LSTM cell")
+parser.add_argument('--max_seq_len',
+                     type=int, default=10, help="The length of memory in an LSTM cell")
 parser.add_argument('--eps_length',
                      type=int, default=140, help="Number of time steps per episode")
 parser.add_argument('--agent',
@@ -85,6 +87,13 @@ parser.add_argument("--local-mode",
                      action="store_true", help="Init Ray in local mode for easier debugging.")
 parser.add_argument("--isEvaluation",
                      action="store_true", help="This mode is used for evaluation")
+parser.add_argument('--outputDir',
+                     type=str, help="Output directory")
+parser.add_argument('--rllibDir',
+                     type=str, help="ML model directory")
+parser.add_argument('--entropy_coeff',
+                     type=float, default=0.0, help="The rate of exploration entropy coefficient")
+                     
 
 args = parser.parse_args()
 
@@ -125,7 +134,7 @@ max_num_aps = 6
 my_trafficType = np.random.choice(['UDP_CBR', 'BURST'])
 my_packetSize = 1500
 my_fragmentSize = 1500
-my_udpLambda =  np.random.randint(low=1, high=500, size=6)*10
+my_udpLambda =  np.random.randint(low=1, high=300, size=6)*10
 
 my_env_number = ''
 
@@ -153,6 +162,18 @@ if args.agent :
 my_seperate_agent_nns = False
 if args.separate_agent_nns :
     my_seperate_agent_nns = args.separate_agent_nns
+
+my_entropy_coeff = 0.0
+if args.entropy_coeff :
+    my_entropy_coeff = args.entropy_coeff
+
+my_lstm = False
+if args.lstm :
+    my_lstm = args.lstm
+
+my_max_seq_len = 10
+if args.max_seq_len :
+    my_max_seq_len = args.max_seq_len
 
 my_output_dir = ""
 
@@ -204,7 +225,9 @@ register_env("my_env", env_creator)
             
 # Step 1 : Load last checkpoint
 
-rllib_dir = "/home/navid/ray_results/no_delay/PPO_2024-07-16_16-30-52/PPO_my_env_015bc_00000_0_2024-07-16_16-30-52/checkpoint_000107"
+rllib_dir = ""
+if args.rllibDir :
+    rllib_dir = args.rllibDir
 
 # Step 2 : Loading policies
 if my_agent == 'central' :
@@ -244,24 +267,27 @@ if my_agent == 'central' :
             episode.custom_metrics["ep_th"] = mean_ep_th
 
         def on_train_result(self, *, algorithm, result: dict, **kwargs):
-            print(result)
-            if bool(result["custom_metrics"]) :
-                ep_th = result["custom_metrics"]["ep_th"]
-                ep_reward = result["custom_metrics"]["ep_reward"]
+            if bool(result['env_runners']["custom_metrics"]) : 
+                    ep_th = result['env_runners']["custom_metrics"]["mean_ep_th"]
+                    ep_reward = result['env_runners']["custom_metrics"]["mean_ep_reward"]
 
-                mean_ep_reward = np.mean(ep_reward)
-                mean_ep_th = np.mean(ep_th)
-                result["custom_metrics"]["mean_ep_th"] = mean_ep_th
-                result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
+                    mean_ep_reward = np.mean(ep_reward)
+                    mean_ep_th = np.mean(ep_th)
+                    result["custom_metrics"]["mean_ep_th"] = mean_ep_th
+                    result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
         
     config = (PPOConfig()
-    .training(gamma=0.9, lr=1e-3, train_batch_size = 1000)
+    .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
     .environment(env="my_env")
-    .rollouts(num_rollout_workers=20, num_envs_per_worker=1, remote_worker_envs= False, ignore_worker_failures=True)
-    .resources(num_gpus=2, num_cpus_per_worker=1, num_gpus_per_worker=0)
+    .resources(num_gpus=2)
+    .env_runners(num_env_runners=25, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+    .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
     .debugging(log_level='DEBUG')
     .framework(args.framework)
-    .fault_tolerance(recreate_failed_workers=True, restart_failed_sub_environments=True)
     .callbacks(RestoreWeightsCallback)
     .reporting(keep_per_episode_custom_metrics=True)
     )
@@ -269,12 +295,12 @@ if my_agent == 'central' :
 elif my_agent == 'multi' :
     if my_seperate_agent_nns :
         policy_checkpoint = []
-        for i in range (6) :
+        for i in range (max_num_aps) :
             policy_checkpoint.append(rllib_dir + '/policies/' + str(i))          
         
         restored_policy = []
         restored_policy_weights = []
-        for i in range (6) :
+        for i in range (max_num_aps) :
             restored_policy.append(Policy.from_checkpoint(policy_checkpoint[i]))
             restored_policy_weights.append(restored_policy[i].get_weights())
         
@@ -343,29 +369,33 @@ elif my_agent == 'multi' :
                 episode.custom_metrics["ep_th"] = mean_ep_th
 
             def on_train_result(self, *, algorithm, result: dict, **kwargs):
-                if bool(result["custom_metrics"]) : 
-                    ep_th = result["custom_metrics"]["ep_th"]
-                    ep_reward = result["custom_metrics"]["ep_reward"]
+                if bool(result['env_runners']["custom_metrics"]) : 
+                        ep_th = result['env_runners']["custom_metrics"]["mean_ep_th"]
+                        ep_reward = result['env_runners']["custom_metrics"]["mean_ep_reward"]
 
-                    mean_ep_reward = np.mean(ep_reward)
-                    mean_ep_th = np.mean(ep_th)
-                    result["custom_metrics"]["mean_ep_th"] = mean_ep_th
-                    result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
+                        mean_ep_reward = np.mean(ep_reward)
+                        mean_ep_th = np.mean(ep_th)
+                        result["custom_metrics"]["mean_ep_th"] = mean_ep_th
+                        result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
             
         print("Running multi-agent environment with distributed execution")
         ap_ids = [str(i) for i in range(max_num_aps)]
         config = (PPOConfig()
-        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000)#, sgd_minibatch_size = 200)
+        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
         .environment(env="my_env")
         .debugging(log_level='DEBUG')
         .framework(args.framework)
-        .resources(num_gpus=2, num_cpus_per_worker=1, num_gpus_per_worker=0)
-        .rollouts(num_rollout_workers=20, num_envs_per_worker=1, remote_worker_envs= False, ignore_worker_failures=True)
+        .resources(num_gpus=2)
+        .env_runners(num_env_runners=25, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+        .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
         .multi_agent(
             policies = {'0', '1', '2', '3', '4', '5'},
             policy_mapping_fn = (lambda agent_id, episode, worker, **kw: str(agent_id)),
             )
-        .fault_tolerance(recreate_failed_workers=True, restart_failed_sub_environments=True)
         .callbacks(RestoreWeightsCallback)
         .reporting(keep_per_episode_custom_metrics=True)
         )
@@ -422,7 +452,7 @@ elif my_agent == 'multi' :
                 policy_reward.append(np.mean(episode.user_data["reward_5"]))
                 mean_ep_reward = 0
                 
-                for i in range(6) :
+                for i in range(max_num_aps) :
                     mean_ep_reward += policy_reward[i]
 
                 episode.custom_metrics["policy_reward1"] = policy_reward[0]
@@ -445,17 +475,21 @@ elif my_agent == 'multi' :
                     result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
 
         config = (PPOConfig()
-            .training(gamma=0.9, lr=1e-3, train_batch_size = 1000)#, sgd_minibatch_size = 200)
+            .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
             .environment(env="my_env")
             .debugging(log_level='DEBUG')
             .framework(args.framework)
-            .resources(num_gpus=2, num_cpus_per_worker=1, num_gpus_per_worker=0)
-            .rollouts(num_rollout_workers=20, num_envs_per_worker=1, remote_worker_envs= False, ignore_worker_failures=True)
+            .resources(num_gpus=2)
+            .env_runners(num_env_runners=25, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+            .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
             .multi_agent(
                 policies = {'ap'},
                 policy_mapping_fn = (lambda agent_id, episode, worker, **kw: f"ap"),
                 )
-            .fault_tolerance(recreate_failed_workers=True, restart_failed_sub_environments=True)
             .callbacks(RestoreWeightsCallback)
             )
 

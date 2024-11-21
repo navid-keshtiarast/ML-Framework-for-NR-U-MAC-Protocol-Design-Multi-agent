@@ -143,7 +143,7 @@ public:
    * Sets the defautl defer time to be used by LBT aalgorithm
    * @param deferTime defer time to be used by LBT algorithm
    */
-  void SetDeferTime (const Time& deferTime);
+  void SetDeferTime (const Time deferTime);
 
   /**
    * \brief Gets the duration of the slot that is configured to be used by LBT
@@ -155,7 +155,7 @@ public:
    * \brief Sets the duration of the slot to be used by the LBT algorithm for
    * @param slotTime duration of the slot
    */
-  void SetSlotTime (const Time& slotTime);
+  void SetSlotTime (const Time slotTime);
 
   /**
    * \brief Gets the MCOT of the transmission opportunity that will be granted to
@@ -169,7 +169,7 @@ public:
    * the user of LBT CAM, depends on the priority class
    * @param mcot the maximum channel occupancy time
    */
-  void SetMcot (const Time& mcot);
+  void SetMcot (const Time mcot);
 
 
 protected:
@@ -375,13 +375,13 @@ public:
    */
   virtual void SetNrGnbMac (Ptr<NrGnbMac> mac) override;
 
-  void SetCat4MinCw (const uint32_t& contentionWindow);
+  void SetCat4MinCw (const uint32_t contentionWindow);
 
-  void SetCat4MaxCw (const uint32_t& contentionWindow);
+  void SetCat4MaxCw (const uint32_t contentionWindow);
 
-  void SetCat4LinBackoff (const uint32_t& backoffConst);
+  void SetCat4LinBackoff (const uint32_t backoffConst);
 
-  void SetCat4BackoffType (const uint32_t& backoffType);
+  void SetCat4BackoffType (const uint32_t backoffType);
 
   /**
    * \brief Gets the contention window value that is used with Cat. 3 LBT is

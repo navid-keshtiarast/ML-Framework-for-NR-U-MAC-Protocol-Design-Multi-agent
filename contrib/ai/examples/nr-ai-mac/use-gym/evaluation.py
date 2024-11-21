@@ -85,6 +85,8 @@ parser.add_argument("--reward_type",
                     )
 parser.add_argument('--lstm',
                      action='store_true', help="Whether or not to use an LSTM cell")
+parser.add_argument('--max_seq_len',
+                     type=int, default=10, help="The length of memory in an LSTM cell")
 parser.add_argument('--eps_length',
                      type=int, default=140, help="Number of time steps per episode")
 parser.add_argument('--agent',
@@ -99,7 +101,8 @@ parser.add_argument('--outputDir',
                      type=str, help="Output directory")
 parser.add_argument('--rllibDir',
                      type=str, help="ML model directory")
-  
+parser.add_argument('--entropy_coeff',
+                     type=float, default=0.0, help="The rate of exploration entropy coefficient")  
                    
 
 args = parser.parse_args()
@@ -122,7 +125,7 @@ my_duration = 50
 if args.duration:
     my_duration = args.duration
 
-my_ap_nums = 6#np.random.randint(low=1,high=7) 
+my_ap_nums = np.random.randint(low=1,high=7) 
 if args.ap_nums:
     my_min_num_aps = args.min_num_aps
 if args.ap_nums:
@@ -146,7 +149,7 @@ if args.trafficType:
 
 my_packetSize = 1500
 my_fragmentSize = 1500
-my_udpLambda =  np.random.randint(low=1, high=500, size=6)*10
+my_udpLambda =  np.random.randint(low=1, high=300, size=6)*10
 
 # For customEpisode
 my_udpLambda[0] =  2290
@@ -171,17 +174,6 @@ if args.udpLambda6:
 my_env_number = ''
 
 my_custom_episode = True
-# if args.custom_episode :
-#     if args.ap_nums :
-#         my_ap_nums = args.ap_nums
-#     if args.trafficType :
-#         my_trafficType = args.trafficType
-#     if args.packetSize :
-#         my_packetSize = args.packetSize
-#     if args.udpLambda :
-#         my_udpLambda = []
-#         for i in range (max_num_aps) :
-#             my_udpLambda[i] = args.udpLambda
 
 my_reward_type = 'option3'
 if args.reward_type :
@@ -198,6 +190,18 @@ if args.separate_agent_nns :
 my_output_dir = ""
 if args.outputDir :
     my_output_dir = args.outputDir + '/rllib/' + str(my_ap_nums) + '/'
+
+my_entropy_coeff = 0.0
+if args.entropy_coeff :
+    my_entropy_coeff = args.entropy_coeff
+
+my_lstm = False
+if args.lstm :
+    my_lstm = args.lstm
+
+my_max_seq_len = 10
+if args.max_seq_len :
+    my_max_seq_len = args.max_seq_len
 
 ray.shutdown()
 
@@ -249,12 +253,12 @@ register_env("my_env", env_creator)
             
 # Step 1 : Load checkpoint
 
-rllib_dir = "/home/inets/ray_results/PPO_2024-07-16_16-30-52"
+rllib_dir = ""
 if args.rllibDir :
     rllib_dir = args.rllibDir
     
 analysis = tune.ExperimentAnalysis(experiment_checkpoint_path=rllib_dir)
-checkpoint_dir = analysis.get_best_checkpoint(analysis.trials[0], "episode_reward_mean", "max")
+checkpoint_dir = analysis.get_best_checkpoint(analysis.trials[0], "env_runners/episode_reward_mean", "max")
 print('Best checkpoint is ', checkpoint_dir)
 
 # Step 2 : Loading policies
@@ -270,14 +274,18 @@ if my_agent == 'central' :
             algorithm.set_weights({"default_policy": eval_policy_weights})
     
     config = (PPOConfig()
-    .training(gamma=0.9, lr=1e-3, train_batch_size = 5000)#, sgd_minibatch_size = 200)
-    .evaluation(evaluation_num_workers=1, evaluation_interval=1,evaluation_duration=10, evaluation_duration_unit="episodes", evaluation_parallel_to_training=False)
+    .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
+    .evaluation(evaluation_num_env_runners=1, evaluation_interval=1,evaluation_duration=10, evaluation_duration_unit="episodes", evaluation_parallel_to_training=False)
     .environment(env="my_env")
-    .rollouts(num_rollout_workers=0, num_envs_per_worker=1, remote_worker_envs= False, ignore_worker_failures=True)
-    .resources(num_gpus=0, num_cpus_per_worker=1, num_gpus_per_worker=0)
+    .resources(num_gpus=2)
+    .env_runners(num_env_runners=0, num_envs_per_env_runner=1, num_cpus_per_env_runner=2, num_gpus_per_env_runner=0, remote_worker_envs=False)
+    .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
     .debugging(log_level='DEBUG')
     .framework(args.framework)
-    .fault_tolerance(recreate_failed_workers=True, restart_failed_sub_environments=True)
     .callbacks(RestoreWeightsCallback)
     )
 
@@ -306,18 +314,22 @@ elif my_agent == 'multi' :
         
         ap_ids = [str(i) for i in range(max_num_aps)]
         config = (PPOConfig()
-        .training(gamma=0.9, lr=1e-3, train_batch_size = 5000)#, sgd_minibatch_size = 200)
-        .evaluation(evaluation_num_workers=1, evaluation_interval=1,evaluation_duration=10, evaluation_duration_unit="episodes", evaluation_parallel_to_training=False)
+        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
+        .evaluation(evaluation_num_env_runners=1, evaluation_interval=1,evaluation_duration=10, evaluation_duration_unit="episodes", evaluation_parallel_to_training=False)
         .environment(env="my_env")
         .debugging(log_level='DEBUG')
         .framework(args.framework)
-        .resources(num_gpus=0, num_cpus_per_worker=1, num_gpus_per_worker=0)
-        .rollouts(num_rollout_workers=0, num_envs_per_worker=1, remote_worker_envs= False, ignore_worker_failures=True)
+        .resources(num_gpus=2)
+        .env_runners(num_env_runners=0, num_envs_per_env_runner=1, num_cpus_per_env_runner=2, num_gpus_per_env_runner=0, remote_worker_envs=False)
+        .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
         .multi_agent(
             policies = {'0', '1', '2', '3', '4', '5'},
             policy_mapping_fn = (lambda agent_id, episode, worker, **kw: str(agent_id)),
             )
-        .fault_tolerance(recreate_failed_workers=True, restart_failed_sub_environments=True)
         .callbacks(RestoreWeightsCallback)
         )
 
@@ -333,18 +345,22 @@ elif my_agent == 'multi' :
                 algorithm.set_weights({"ap": eval_policy_weights})
 
         config = (PPOConfig()
-        .training(gamma=0.9, lr=1e-3, train_batch_size = 5000)#, sgd_minibatch_size = 200)
-        .evaluation(evaluation_num_workers=1, evaluation_interval=1,evaluation_duration=10, evaluation_duration_unit="episodes", evaluation_parallel_to_training=False)
+        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
+        .evaluation(evaluation_num_env_runners=1, evaluation_interval=1,evaluation_duration=10, evaluation_duration_unit="episodes", evaluation_parallel_to_training=False)
         .environment(env="my_env")
         .debugging(log_level='DEBUG')
         .framework(args.framework)
-        .resources(num_gpus=0, num_cpus_per_worker=1, num_gpus_per_worker=0)
-        .rollouts(num_rollout_workers=0, num_envs_per_worker=1, remote_worker_envs= False, ignore_worker_failures=True)
+        .resources(num_gpus=2)
+            .env_runners(num_env_runners=0, num_envs_per_env_runner=1, num_cpus_per_env_runner=2, num_gpus_per_env_runner=0, remote_worker_envs=False)
+            .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
         .multi_agent(
             policies = {'ap'},
             policy_mapping_fn = (lambda agent_id, episode, worker, **kw: f"ap"),
             )
-        .fault_tolerance(recreate_failed_workers=True, restart_failed_sub_environments=True)
         .callbacks(RestoreWeightsCallback)
         )
 

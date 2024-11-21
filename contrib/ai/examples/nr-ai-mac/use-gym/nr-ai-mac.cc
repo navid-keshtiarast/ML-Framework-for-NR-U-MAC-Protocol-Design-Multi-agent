@@ -109,9 +109,9 @@ ConfigureDefaultValues (bool cellScan = true, double beamSearchAngleStep = 10.0,
   Config::SetDefault ("ns3::NrLbtAccessManager::EnergyDetectionThreshold", DoubleValue (cat3and4EDThreshold));
   // Cat2 ED threshold
   Config::SetDefault ("ns3::NrCat2LbtAccessManager::Cat2EDThreshold", DoubleValue (cat2EDThreshold));
-  Config::SetDefault ("ns3::NrLbtAccessManager::Mcot", TimeValue (MilliSeconds(8)));
+  Config::SetDefault ("ns3::NrLbtAccessManager::Mcot", TimeValue (MilliSeconds(5)));
   Config::SetDefault ("ns3::NrPhyRxTrace::SimTag", StringValue(SimTag));
-  //Config::SetDefault ("ns3::ThresholdPreambleDetectionModel::MinimumRssi",DoubleValue (-62));
+  // Config::SetDefault ("ns3::ThresholdPreambleDetectionModel::MinimumRssi",DoubleValue (-62));
   
   Config::SetDefault ("ns3::UdpSocket::RcvBufSize", UintegerValue(0xFFFFFFFF));
   Config::SetDefault ("ns3::ArpCache::PendingQueueSize", UintegerValue(0xFFFFFFFF));
@@ -1096,15 +1096,15 @@ UpdateMacParameters (NodeContainer gNbNodes)
     uint32_t ipv4ifIndex = 1;
     for (uint32_t i = 0; i < g_minCw.size(); i++)
     {
-        nr[i]->GetNrHelper() ->SetGnbChannelAccessManagerTypeId(TypeId::LookupByName("ns3::NrCat4LbtAccessManager"));
-        nr[i]->GetNrHelper() ->SetGnbChannelAccessManagerAttribute ("Mcot", TimeValue(MilliSeconds (g_mcot[i])));
+        nr[i]->ChangeMcot(MilliSeconds (g_mcot[i]));
         nr[i]->ChangeGnbTxPower(g_txPower[i]);
+        nr[i]->ChangeEdThreshold(g_edThreshold[i]);
+        nr[i]->ChangeBackoffType(g_backoffType[i]);
+        nr[i]->ChangeSlotTime(g_slotTime[i]);
+        nr[i]->ChangeDeferTime(MicroSeconds (g_deferTime[i]));
+        nr[i]->ChangeMinCw(g_minCw[i]);
+        
         nr[i]->ChangeMcs(g_mcs[i]);
-        nr[i]->GetNrHelper() ->SetGnbChannelAccessManagerAttribute ("EnergyDetectionThreshold", DoubleValue (g_edThreshold[i]));
-        nr[i]->GetNrHelper() ->SetGnbChannelAccessManagerAttribute ("BackOffType", UintegerValue (g_backoffType[i]));
-        nr[i]->GetNrHelper()->SetGnbChannelAccessManagerAttribute ("Slot",TimeValue (MicroSeconds (g_slotTime[i])));
-        nr[i]->GetNrHelper()->SetGnbChannelAccessManagerAttribute ("DeferTime",TimeValue (MicroSeconds (g_deferTime[i])));
-        nr[i]->GetNrHelper() ->SetGnbChannelAccessManagerAttribute ("Cat4MinCw", UintegerValue (g_minCw[i]));
     }
     Simulator::Schedule (g_timeStep, &UpdateMacParameters, gNbNodes);
 }
@@ -1363,6 +1363,8 @@ main (int argc, char *argv[])
         fragmentSizeVector[i] = fragmentSize;
     }  
 
+    std::stringstream outputDirAutomatic;
+    
     NS_LOG_DEBUG ("Create base stations and mobile terminals");
     NodeContainer allWirelessNodes;
     NodeContainer wifiStaNodes;

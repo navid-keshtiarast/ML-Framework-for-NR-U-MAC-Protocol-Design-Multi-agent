@@ -857,7 +857,7 @@ BandwidthPartInfoPtrVector NrSingleBwpSetup::GetBwpVector ()
 
 void NrSingleBwpSetup::ChangeGnbTxPower (double newTxPower)
 {
-   // install NR net devices
+  // std::cout << "Debug ChangeGnbTxPower()" << std::endl;
 
   double gnbX = pow (10, newTxPower / 10);
 
@@ -869,8 +869,52 @@ void NrSingleBwpSetup::ChangeGnbTxPower (double newTxPower)
     }
 }
 
+void NrSingleBwpSetup::ChangeMcot (Time newMcot)
+{
+  // std::cout << "Debug ChangeMcot()" << std::endl;
+  for (auto it = m_gnbDev.Begin (); it != m_gnbDev.End (); ++it)
+    {
+      Ptr<NrGnbPhy> phy = m_helper->GetGnbPhy (*it, 0);
+      Ptr<NrLbtAccessManager> nrLbtCam = DynamicCast<NrLbtAccessManager> (phy->GetCam ());
+      nrLbtCam->SetMcot (newMcot);
+    }
+}
+
+void NrSingleBwpSetup::ChangeBackoffType (uint32_t newBackoffType)
+{
+  for (auto it = m_gnbDev.Begin (); it != m_gnbDev.End (); ++it)
+    {
+      Ptr<NrGnbPhy> phy = m_helper->GetGnbPhy (*it, 0);
+      Ptr<NrCat4LbtAccessManager> nrLbtCam = DynamicCast<NrCat4LbtAccessManager> (phy->GetCam ());
+      nrLbtCam->SetCat4BackoffType (newBackoffType);
+    }
+}
+
+void NrSingleBwpSetup::ChangeDeferTime (Time newDeferTime)
+{
+    // std::cout << "Debug ChangeDeferTime()" << std::endl;
+    for (auto it = m_gnbDev.Begin (); it != m_gnbDev.End (); ++it)
+    {
+      Ptr<NrGnbPhy> phy = m_helper->GetGnbPhy (*it, 0);
+      Ptr<NrLbtAccessManager> nrLbtCam = DynamicCast<NrLbtAccessManager> (phy->GetCam ());
+      nrLbtCam->SetDeferTime (newDeferTime);
+    }
+}
+
+void NrSingleBwpSetup::ChangeMinCw (uint32_t newMinCw)
+{
+  // std::cout << "Debug ChangeMinCw()" << std::endl;
+  for (auto it = m_gnbDev.Begin (); it != m_gnbDev.End (); ++it)
+    {
+      Ptr<NrGnbPhy> phy = m_helper->GetGnbPhy (*it, 0);
+      Ptr<NrCat4LbtAccessManager> nrLbtCam = DynamicCast<NrCat4LbtAccessManager> (phy->GetCam ());
+      nrLbtCam->SetCat4MinCw (newMinCw);
+    }
+}
+
 void NrSingleBwpSetup::ChangeMcs (uint32_t mcsValue)
 {
+  // std::cout << "Debug ChangeMcs()" << std::endl;
   for(uint32_t f=0;f < m_gnbDev.GetN(); f++)
   { 
     if (mcsValue <= 28)
@@ -890,14 +934,26 @@ void NrSingleBwpSetup::ChangeAmsdu (uint32_t newAmsdu)
 
 }
 
-void NrSingleBwpSetup::ChangeEdThreshold (uint32_t newEdThreshold)
+void NrSingleBwpSetup::ChangeEdThreshold (double newEdThreshold)
 {
-
+    // std::cout << "Debug ChangeEdThreshold()" << std::endl;
+    for (auto it = m_gnbDev.Begin (); it != m_gnbDev.End (); ++it)
+    {
+      Ptr<NrGnbPhy> phy = m_helper->GetGnbPhy (*it, 0);
+      Ptr<NrLbtAccessManager> nrLbtCam = DynamicCast<NrLbtAccessManager> (phy->GetCam ());
+      nrLbtCam->SetEdThreshold (newEdThreshold);
+    }
 }
 
 void NrSingleBwpSetup::ChangeSlotTime (uint32_t newSlotTime)
 {
-
+    // std::cout << "Debug ChangeSlotTime()" << std::endl;
+    for (auto it = m_gnbDev.Begin (); it != m_gnbDev.End (); ++it)
+    {
+      Ptr<NrGnbPhy> phy = m_helper->GetGnbPhy (*it, 0);
+      Ptr<NrLbtAccessManager> nrLbtCam = DynamicCast<NrLbtAccessManager> (phy->GetCam ());
+      nrLbtCam->SetSlotTime (MicroSeconds(newSlotTime));
+    }
 }
 
 } // namespace ns3

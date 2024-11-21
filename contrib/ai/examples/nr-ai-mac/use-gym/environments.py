@@ -407,7 +407,7 @@ class CentralDecisionEnv (gym.Env):
             'new_edThreshold': gym.spaces.Box(low=-85, high=-60, shape=(self.max_num_aps,), dtype=np.int32),
             'new_backoffType': gym.spaces.Box(low=0, high=3, shape=(self.max_num_aps,), dtype=np.int32),
             'new_minCw': gym.spaces.Box(low=0, high=63, shape=(self.max_num_aps,), dtype=np.int32),
-            'new_slotTime': gym.spaces.Box(low=0, high=20, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_slotTime': gym.spaces.Box(low=1, high=20, shape=(self.max_num_aps,), dtype=np.int32),
             'new_deferTime': gym.spaces.Box(low=0, high=40, shape=(self.max_num_aps,), dtype=np.int32),
         }
         self.action_space = gym.spaces.Dict(action_shape)
@@ -419,7 +419,7 @@ class CentralDecisionEnv (gym.Env):
             'new_edThreshold': gym.spaces.Box(low=-85, high=-60, shape=(self.max_num_aps,), dtype=np.int32),
             'new_backoffType': gym.spaces.Box(low=0, high=3, shape=(self.max_num_aps,), dtype=np.int32),
             'new_minCw': gym.spaces.Box(low=0, high=63, shape=(self.max_num_aps,), dtype=np.int32),
-            'new_slotTime': gym.spaces.Box(low=0, high=20, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_slotTime': gym.spaces.Box(low=1, high=20, shape=(self.max_num_aps,), dtype=np.int32),
             'new_deferTime': gym.spaces.Box(low=0, high=40, shape=(self.max_num_aps,), dtype=np.int32),
             'mcot': gym.spaces.Box(low=0, high=10, shape=(self.max_num_aps,), dtype=np.int32),
             'txPower': gym.spaces.Box(low=-10, high=30, shape=(self.max_num_aps,), dtype=np.int32),
@@ -696,12 +696,12 @@ class CentralDecisionEnv (gym.Env):
                 self.ns3Settings['simRound'] = self.sim_round_set[self.epsNumber]
                 self.epsNumber += 1
             if self.ns3Settings['customEpisode'] == False :
-                self.ns3Settings['numAgents'] = np.random.randint(low=self.min_ap_interval,high=self.max_ap_interval) 
+                self.ns3Settings['numAgents'] = np.random.randint(low=self.min_ap_interval,high=self.max_ap_interval+1)
                 self.num_ap = self.ns3Settings['numAgents']
                 self.ns3Settings['trafficType'] = np.random.choice(['UDP_CBR', 'BURST'])
                 self.ns3Settings['packetSize'] = 1500
                 self.ns3Settings['fragmentSize'] = 1500
-                self.new_udpLambda =  np.random.randint(low=1, high=500, size=6)*10
+                self.new_udpLambda =  np.random.randint(low=1, high=300, size=6)*10
                 self.ns3Settings['udpLambda1'] = self.new_udpLambda[0]
                 self.ns3Settings['udpLambda2'] = self.new_udpLambda[1]
                 self.ns3Settings['udpLambda3'] = self.new_udpLambda[2]
@@ -826,7 +826,7 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
             'new_edThreshold': gym.spaces.Box(low=-85, high=-60, shape=(1,), dtype=np.int32),
             'new_backoffType': gym.spaces.Box(low=0, high=3, shape=(1,), dtype=np.int32),
             'new_minCw': gym.spaces.Box(low=0, high=63, shape=(1,), dtype=np.int32),
-            'new_slotTime': gym.spaces.Box(low=0, high=20, shape=(1,), dtype=np.int32),
+            'new_slotTime': gym.spaces.Box(low=1, high=20, shape=(1,), dtype=np.int32),
             'new_deferTime': gym.spaces.Box(low=0, high=40, shape=(1,), dtype=np.int32),
         }
         self._action_space_in_preferred_format = True
@@ -837,21 +837,22 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
 
         #Defining the observation space for all APs
         observation_shape = {
-            'new_mcot': gym.spaces.Box(low=0, high=10, shape=(1,), dtype=np.int32),
-            'new_txPower': gym.spaces.Box(low=-10, high=30, shape=(1,), dtype=np.int32),
-            'new_mcs': gym.spaces.Box(low=0, high=28, shape=(1,), dtype=np.int32),
-            'new_edThreshold': gym.spaces.Box(low=-85, high=-60, shape=(1,), dtype=np.int32),
-            'new_backoffType': gym.spaces.Box(low=0, high=3, shape=(1,), dtype=np.int32),
-            'new_minCw': gym.spaces.Box(low=0, high=63, shape=(1,), dtype=np.int32),
-            'new_slotTime': gym.spaces.Box(low=0, high=20, shape=(1,), dtype=np.int32),
-            'new_deferTime': gym.spaces.Box(low=0, high=40, shape=(1,), dtype=np.int32),
-            'mcot': gym.spaces.Box(low=0, high=10, shape=(1,), dtype=np.int32),
-            'txPower': gym.spaces.Box(low=-10, high=30, shape=(1,), dtype=np.int32),
-            'mcs': gym.spaces.Box(low=0, high=28, shape=(1,), dtype=np.int32),
-            'edThreshold' : gym.spaces.Box(low=-85, high=0, shape=(1,), dtype=np.int32),
-            'backoffType': gym.spaces.Box(low=0, high=3, shape=(1,), dtype=np.int32),
-            'minCw': gym.spaces.Box(low=0, high=63, shape=(1,), dtype=np.int32),
-            'slotTime': gym.spaces.Box(low=0, high=20, shape=(1,), dtype=np.int32),
+            'new_mcot': gym.spaces.Box(low=0, high=10, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_txPower': gym.spaces.Box(low=-10, high=30, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_mcs': gym.spaces.Box(low=0, high=28, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_edThreshold': gym.spaces.Box(low=-85, high=0, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_backoffType': gym.spaces.Box(low=0, high=3, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_minCw': gym.spaces.Box(low=0, high=63, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_slotTime': gym.spaces.Box(low=0, high=20, shape=(self.max_num_aps,), dtype=np.int32),
+            'new_deferTime': gym.spaces.Box(low=0, high=40, shape=(self.max_num_aps,), dtype=np.int32),
+            'mcot': gym.spaces.Box(low=0, high=10, shape=(self.max_num_aps,), dtype=np.int32),
+            'txPower': gym.spaces.Box(low=-10, high=30, shape=(self.max_num_aps,), dtype=np.int32),
+            'mcs': gym.spaces.Box(low=0, high=28, shape=(self.max_num_aps,), dtype=np.int32),
+            'edThreshold' : gym.spaces.Box(low=-85, high=0, shape=(self.max_num_aps,), dtype=np.int32),
+            'backoffType': gym.spaces.Box(low=0, high=3, shape=(self.max_num_aps,), dtype=np.int32),
+            'minCw': gym.spaces.Box(low=0, high=63, shape=(self.max_num_aps,), dtype=np.int32),
+            'slotTime': gym.spaces.Box(low=0, high=20, shape=(self.max_num_aps,), dtype=np.int32),
+            'deferTime': gym.spaces.Box(low=0, high=40, shape=(self.max_num_aps,), dtype=np.int32),
             'nodesNum': gym.spaces.Box(low=0, high=6, shape=(1,), dtype=np.int32),
             'trafficType' : gym.spaces.Box(low=0, high=1, shape=(1,), dtype=np.int32),
             'udpLambda' : gym.spaces.Box(low=0, high=8000, shape=(self.max_num_aps,), dtype=np.int32),
@@ -861,7 +862,6 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
             'throughput': gym.spaces.Box(low=0, high=1000000000, shape=(self.max_num_aps,), dtype=np.int64),
             'delay' : gym.spaces.Box(low=0, high=100000, shape=(self.max_num_aps,), dtype=np.int32),
             'airtime' : gym.spaces.Box(low=0, high=100000, shape=(self.max_num_aps,), dtype=np.int32),
-            'deferTime': gym.spaces.Box(low=0, high=40, shape=(1,), dtype=np.int32),
         }
         self._obs_space_in_preferred_format = True
         single_observation_space = gym.spaces.Dict(observation_shape)
@@ -996,13 +996,14 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
         # print("Debugging MultiAgentDecisionEnv get_obs()")
         for i in range(self.max_num_aps) :
             if len(dObs) == 0:
-                self.observation[i]['mcot'] = np.array([0]).astype(np.int32)
-                self.observation[i]['txPower'] = np.array([0]).astype(np.int32)
-                self.observation[i]['mcs'] = np.array([0]).astype(np.int32)
-                self.observation[i]['edThreshold'] = np.array([0]).astype(np.int32)
-                self.observation[i]['backoffType'] = np.array([0]).astype(np.int32)
-                self.observation[i]['minCw'] = np.array([0]).astype(np.int32)
-                self.observation[i]['slotTime'] = np.array([0]).astype(np.int32)
+                self.observation[i]['mcot'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['txPower'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['mcs'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['edThreshold'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['backoffType'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['minCw'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['slotTime'] = np.array([0,0,0,0,0,0]).astype(np.int32)
+                self.observation[i]['deferTime'] = np.array([0,0,0,0,0,0]).astype(np.int32)
                 self.observation[i]['nodesNum'] = np.array([self.num_ap]).astype(np.int32)
                 self.observation[i]['trafficType'] = np.array([0]).astype(np.int32)
                 self.observation[i]['udpLambda'] = np.array([0,0,0,0,0,0]).astype(np.int32)
@@ -1012,18 +1013,17 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                 self.observation[i]['throughput'] = np.array([0,0,0,0,0,0]).astype(np.int64)
                 self.observation[i]['delay'] = np.array([0,0,0,0,0,0]).astype(np.int32)
                 self.observation[i]['airtime'] = np.array([0,0,0,0,0,0]).astype(np.int32)
-                self.observation[i]['deferTime'] = np.array([0]).astype(np.int32)
-
+                
                 self.th_array = np.array([0,0,0,0,0,0]).astype(np.int64)
 
             else :
-                self.observation[i]['mcot'] = np.array([dObs[i]]).astype(np.int32)
-                self.observation[i]['txPower'] = np.array([dObs[self.max_num_aps+i]]).astype(np.int32)
-                self.observation[i]['mcs'] = np.array([dObs[2*self.max_num_aps+i]]).astype(np.int32)
-                self.observation[i]['edThreshold'] = np.array([dObs[3*self.max_num_aps+i]]).astype(np.int32)
-                self.observation[i]['backoffType'] = np.array([dObs[4*self.max_num_aps+i]]).astype(np.int32)
-                self.observation[i]['minCw'] = np.array([dObs[5*self.max_num_aps+i]]).astype(np.int32)
-                self.observation[i]['slotTime'] = np.array([dObs[6*self.max_num_aps+i]]).astype(np.int32)
+                self.observation[i]['mcot'] = np.array([dObs[0],dObs[1],dObs[2],dObs[3],dObs[4],dObs[5]]).astype(np.int32)
+                self.observation[i]['txPower'] = np.array([dObs[6],dObs[7],dObs[8],dObs[9],dObs[10],dObs[11]]).astype(np.int32)
+                self.observation[i]['mcs'] = np.array([dObs[12],dObs[13],dObs[14],dObs[15],dObs[16],dObs[17]]).astype(np.int32)
+                self.observation[i]['edThreshold'] = np.array([dObs[18],dObs[19],dObs[20],dObs[21],dObs[22],dObs[23]]).astype(np.int32)
+                self.observation[i]['backoffType'] = np.array([dObs[24],dObs[25],dObs[26],dObs[27],dObs[28],dObs[29]]).astype(np.int32)
+                self.observation[i]['minCw'] = np.array([dObs[30],dObs[31],dObs[32],dObs[33],dObs[34],dObs[35]]).astype(np.int32)
+                self.observation[i]['slotTime'] = np.array([dObs[36],dObs[37],dObs[38],dObs[39],dObs[40],dObs[41]]).astype(np.int32)
                 self.observation[i]['nodesNum'] = np.array([self.num_ap]).astype(np.int32)
                 self.observation[i]['trafficType'] = np.array([dObs[7*self.max_num_aps+i]]).astype(np.int32)
                 self.observation[i]['udpLambda'] = np.array([dObs[48],dObs[49],dObs[50],dObs[51],dObs[52],dObs[53]]).astype(np.int32)
@@ -1032,30 +1032,30 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                 self.observation[i]['throughput'] = np.array([dObs[96],dObs[97],dObs[98],dObs[99],dObs[100],dObs[101]]).astype(np.int64)
                 self.observation[i]['delay'] = np.array([dObs[102],dObs[103],dObs[104],dObs[105],dObs[106],dObs[107]]).astype(np.int32)
                 self.observation[i]['airtime'] = np.array([dObs[108],dObs[109],dObs[110],dObs[111],dObs[112],dObs[113]]).astype(np.int32)
-                self.observation[i]['deferTime'] = np.array([dObs[19*self.max_num_aps+i]]).astype(np.int32)
+                self.observation[i]['deferTime'] = np.array([dObs[114],dObs[115],dObs[116],dObs[117],dObs[118],dObs[119]]).astype(np.int32)
 
                 self.th_array = np.array([dObs[96],dObs[97],dObs[98],dObs[99],dObs[100],dObs[101]]).astype(np.int64)
 
-            self.observation[i]['new_mcot'] = np.array([dAction[i]]).astype(np.int32)
-            self.observation[i]['new_txPower'] = np.array([dAction[self.max_num_aps+i]]).astype(np.int32)
-            self.observation[i]['new_mcs'] = np.array([dAction[2*self.max_num_aps+i]]).astype(np.int32)
-            self.observation[i]['new_edThreshold'] = np.array([dAction[3*self.max_num_aps+i]]).astype(np.int32)
-            self.observation[i]['new_backoffType'] = np.array([dAction[4*self.max_num_aps+i]]).astype(np.int32)
-            self.observation[i]['new_minCw'] = np.array([dAction[5*self.max_num_aps+i]]).astype(np.int32)
-            self.observation[i]['new_slotTime'] = np.array([dAction[6*self.max_num_aps+i]]).astype(np.int32)
-            self.observation[i]['new_deferTime'] = np.array([dAction[7*self.max_num_aps+i]]).astype(np.int32)
+            self.observation[i]['new_mcot'] = np.array([dAction[0], dAction[1], dAction[2], dAction[3], dAction[4], dAction[5]]).astype(np.int32)
+            self.observation[i]['new_txPower'] = np.array([dAction[6], dAction[7], dAction[8], dAction[9], dAction[10], dAction[11]]).astype(np.int32)
+            self.observation[i]['new_mcs'] = np.array([dAction[12], dAction[13], dAction[14], dAction[15], dAction[16], dAction[17]]).astype(np.int32)
+            self.observation[i]['new_edThreshold'] = np.array([dAction[18], dAction[19], dAction[20], dAction[21], dAction[22], dAction[23]]).astype(np.int32)
+            self.observation[i]['new_backoffType'] = np.array([dAction[24], dAction[25], dAction[26], dAction[27], dAction[28], dAction[29]]).astype(np.int32)
+            self.observation[i]['new_minCw'] = np.array([dAction[30], dAction[31], dAction[32], dAction[33], dAction[34], dAction[35]]).astype(np.int32)
+            self.observation[i]['new_slotTime'] = np.array([dAction[36], dAction[37], dAction[38], dAction[39], dAction[40], dAction[41]]).astype(np.int32)
+            self.observation[i]['new_deferTime'] = np.array([dAction[42], dAction[43], dAction[44], dAction[45], dAction[46], dAction[47]]).astype(np.int32)
 
         if len(dObs) != 0:
             self.observation[0]['gnbRxPowerInterference'] = np.array([dObs[66],dObs[72],dObs[78],dObs[84],dObs[90]]).astype(np.int32) 
             self.observation[1]['gnbRxPowerInterference'] = np.array([dObs[61],dObs[73],dObs[79],dObs[85],dObs[91]]).astype(np.int32) 
             self.observation[2]['gnbRxPowerInterference'] = np.array([dObs[62],dObs[68],dObs[80],dObs[86],dObs[92]]).astype(np.int32) 
-            self.observation[3]['gnbRxPowerInterference'] = np.array([dObs[63],dObs[69],dObs[75],dObs[76],dObs[77]]).astype(np.int32) 
+            self.observation[3]['gnbRxPowerInterference'] = np.array([dObs[63],dObs[69],dObs[75],dObs[87],dObs[93]]).astype(np.int32) 
             self.observation[4]['gnbRxPowerInterference'] = np.array([dObs[64],dObs[70],dObs[76],dObs[82],dObs[94]]).astype(np.int32) 
             self.observation[5]['gnbRxPowerInterference'] = np.array([dObs[65],dObs[71],dObs[77],dObs[83],dObs[89]]).astype(np.int32)     
-
+        
         # For partial observability
         for i in range(self.max_num_aps) :
-            detect = self.observation[i]['gnbRxPowerInterference'] >= self.observation[i]['edThreshold'][0]
+            detect = self.observation[i]['gnbRxPowerInterference'] >= self.observation[i]['edThreshold'][i]
             self.observation[i]['nodesNum'][0] = np.count_nonzero(detect) + 1
             detect_index = np.delete(range(self.max_num_aps),i)
             for j in range(self.max_num_aps-1) :
@@ -1064,6 +1064,22 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                     self.observation[i]['throughput'][detect_index[j]] = 0
                     self.observation[i]['delay'][detect_index[j]] = 0
                     self.observation[i]['airtime'][detect_index[j]] = 0
+                    self.observation[i]['mcot'][detect_index[j]] = 0
+                    self.observation[i]['txPower'][detect_index[j]] = 0
+                    self.observation[i]['mcs'][detect_index[j]] = 0
+                    self.observation[i]['edThreshold'][detect_index[j]] = 0
+                    self.observation[i]['backoffType'][detect_index[j]] = 0
+                    self.observation[i]['minCw'][detect_index[j]] = 0
+                    self.observation[i]['slotTime'][detect_index[j]] = 0
+                    self.observation[i]['deferTime'][detect_index[j]] = 0
+                    self.observation[i]['new_mcot'][detect_index[j]] = 0
+                    self.observation[i]['new_txPower'][detect_index[j]] = 0
+                    self.observation[i]['new_mcs'][detect_index[j]] = 0
+                    self.observation[i]['new_edThreshold'][detect_index[j]] = 0
+                    self.observation[i]['new_backoffType'][detect_index[j]] = 0
+                    self.observation[i]['new_minCw'][detect_index[j]] = 0
+                    self.observation[i]['new_slotTime'][detect_index[j]] = 0
+                    self.observation[i]['new_deferTime'][detect_index[j]] = 0
         
         # For constantly changing ap_num
         if self.isEvaluation != True and self.num_ap < self.max_num_aps:
@@ -1076,6 +1092,23 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                 temp[i]['throughput'] = self.rearrange_np_array(temp[i]['throughput'],self.random_order)
                 temp[i]['delay'] = self.rearrange_np_array(temp[i]['delay'],self.random_order)
                 temp[i]['airtime'] = self.rearrange_np_array(temp[i]['airtime'],self.random_order)
+                temp[i]['mcot'] = self.rearrange_np_array(temp[i]['mcot'],self.random_order)
+                temp[i]['txPower'] = self.rearrange_np_array(temp[i]['txPower'],self.random_order)
+                temp[i]['mcs'] = self.rearrange_np_array(temp[i]['mcs'],self.random_order)
+                temp[i]['edThreshold'] = self.rearrange_np_array(temp[i]['edThreshold'],self.random_order)
+                temp[i]['backoffType'] = self.rearrange_np_array(temp[i]['backoffType'],self.random_order)
+                temp[i]['minCw'] = self.rearrange_np_array(temp[i]['minCw'],self.random_order)
+                temp[i]['slotTime'] = self.rearrange_np_array(temp[i]['slotTime'],self.random_order)
+                temp[i]['deferTime'] = self.rearrange_np_array(temp[i]['deferTime'],self.random_order)
+                temp[i]['new_mcot'] = self.rearrange_np_array(temp[i]['new_mcot'],self.random_order)
+                temp[i]['new_txPower'] = self.rearrange_np_array(temp[i]['new_txPower'],self.random_order)
+                temp[i]['new_mcs'] = self.rearrange_np_array(temp[i]['new_mcs'],self.random_order)
+                temp[i]['new_edThreshold'] = self.rearrange_np_array(temp[i]['new_edThreshold'],self.random_order)
+                temp[i]['new_backoffType'] = self.rearrange_np_array(temp[i]['new_backoffType'],self.random_order)
+                temp[i]['new_minCw'] = self.rearrange_np_array(temp[i]['new_minCw'],self.random_order)
+                temp[i]['new_slotTime'] = self.rearrange_np_array(temp[i]['new_slotTime'],self.random_order)
+                temp[i]['new_deferTime'] = self.rearrange_np_array(temp[i]['new_deferTime'],self.random_order)
+                
                 random_gnb = self.random_order.copy()
                 random_gnb.remove(i)
                 for j in range (self.max_num_aps-1) :
@@ -1240,12 +1273,12 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                 self.ns3Settings['simRound'] = self.sim_round_set[self.epsNumber]
                 self.epsNumber += 1
             if self.ns3Settings['customEpisode'] == False :
-                self.ns3Settings['numAgents'] = np.random.randint(low=self.min_ap_interval,high=self.max_ap_interval) 
+                self.ns3Settings['numAgents'] = np.random.randint(low=self.min_ap_interval,high=self.max_ap_interval+1) 
                 self.num_ap = self.ns3Settings['numAgents']
                 self.ns3Settings['trafficType'] = np.random.choice(['UDP_CBR', 'BURST'])
                 self.ns3Settings['packetSize'] = 1500
                 self.ns3Settings['fragmentSize'] = 1500
-                self.new_udpLambda =  np.random.randint(low=1, high=500, size=6)*10
+                self.new_udpLambda =  np.random.randint(low=1, high=300, size=6)*10
                 self.ns3Settings['udpLambda1'] = self.new_udpLambda[0]
                 self.ns3Settings['udpLambda2'] = self.new_udpLambda[1]
                 self.ns3Settings['udpLambda3'] = self.new_udpLambda[2]
