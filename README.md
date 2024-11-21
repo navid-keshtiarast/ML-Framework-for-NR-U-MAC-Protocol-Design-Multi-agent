@@ -3,6 +3,7 @@
 ## Introduction
 
 The NR
+
 ## Features
 
 * Support of a wide range of channel models, including the model based on 3GPP TR 38.901 for frequencies between 0.5 and 100 GHz. Ray tracing and measured traces can also be used.
@@ -77,19 +78,27 @@ Note : "YOUR_RAY_CHECKPOINT" is by default saved in home/user/ray_results/, e.g.
 
 3. Debugging possible errors 
 
-a. ns3-ai environemnt path in environments.py sometimes needs to be defined explicitly
+a. ns3-ai environemnt path in [environments.py](./contrib/ai/examples/nr-ai-mac/use-gym/environments.py) sometimes needs to be defined explicitly
 
+```bash
 self.dummyEnv = Ns3Env(targetName="ns3ai_nrmac_gym",
             ns3Path="YOUR_NS3_PATH", ns3Settings=ns3Settings, envNumber = self.envNumber)
+```
             
-b. The path to pathloss matrix in nr-ai-mac.cc sometimes need to be defined explicitly
+b. The path to pathloss matrix in [nr-ai-mac.cc](./contrib/ai/examples/nr-ai-mac/use-gym/nr-ai-mac.cc) sometimes need to be defined explicitly
 
+```bash
 std::string pathlossDir = "YOUR_NS3_PATH/freespacePL/";
+```
+
 
 ## Documentation
+
 The documentation of this module is available at [this link](./src/mmwave/doc/mmwave-doc.md).
 
 ## Related modules
+
+In order to implement the NR-AI-MAC module, we 
 - MilliCar is an ns-3 module for the simulation of mmWave NR V2X networks. Check [this repo](https://github.com/signetlabdei/millicar) for further details.
 - A seperate module is being developed for [mmWave UE Energy Consumption](https://github.com/arghasen10/mmwave-energy "mmwave-energy"). You can use this module for analyzing 
 Energy Consumption behaviour of mmwave UE. Check this repository for further details.
