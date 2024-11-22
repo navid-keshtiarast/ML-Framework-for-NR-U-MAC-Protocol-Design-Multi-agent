@@ -2,9 +2,7 @@
 
 ## Requirements
 
-1. Install the ns-3 prerequisites listed in the following website
-
-https://www.nsnam.org/wiki/Installation
+1. Install the ns-3 prerequisites listed in the following [website] (https://www.nsnam.org/wiki/Installation). The ns-3 version we are using is ns-3.38
 
 2. Boost C++ libraries
 
@@ -24,11 +22,11 @@ sudo apt install libprotobuf-dev protobuf-compiler
 sudo apt install pybind11-dev
 ```
 
-5. RayRLlib
+5. RayRLlib version 2.37.0
 
 
 ```bash
-pip install -U "ray[data,train,tune,serve]"
+pip install -U "ray[data,train,tune,serve]==2.37.0"
 ```
 
 ## General setup 

@@ -283,8 +283,8 @@ if my_agent == 'central' :
                       }
                 )
     .environment(env="my_env")
-    .resources(num_gpus=2)
-    .env_runners(num_env_runners=25, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+    .resources(num_gpus=0)
+    .env_runners(num_env_runners=5, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
     .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
     .debugging(log_level='DEBUG')
     .framework(args.framework)
@@ -389,8 +389,8 @@ elif my_agent == 'multi' :
         .environment(env="my_env")
         .debugging(log_level='DEBUG')
         .framework(args.framework)
-        .resources(num_gpus=2)
-        .env_runners(num_env_runners=25, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+        .resources(num_gpus=0)
+        .env_runners(num_env_runners=5, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
         .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
         .multi_agent(
             policies = {'0', '1', '2', '3', '4', '5'},
@@ -483,8 +483,8 @@ elif my_agent == 'multi' :
             .environment(env="my_env")
             .debugging(log_level='DEBUG')
             .framework(args.framework)
-            .resources(num_gpus=2)
-            .env_runners(num_env_runners=25, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+            .resources(num_gpus=0)
+            .env_runners(num_env_runners=5, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
             .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
             .multi_agent(
                 policies = {'ap'},
