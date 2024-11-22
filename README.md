@@ -73,7 +73,7 @@ Note : "YOUR_RAY_CHECKPOINT" is by default saved in home/user/ray_results/, e.g.
 
 3. Debugging possible errors 
 
-a. ns3-ai environemnt path in [environments.py](./contrib/ai/examples/nr-ai-mac/use-gym/environments.py) sometimes needs to be defined explicitly
+a. ns3-ai environment path in [environments.py](./contrib/ai/examples/nr-ai-mac/use-gym/environments.py) sometimes needs to be defined explicitly
 
 ```bash
 self.dummyEnv = Ns3Env(targetName="ns3ai_nrmac_gym",
