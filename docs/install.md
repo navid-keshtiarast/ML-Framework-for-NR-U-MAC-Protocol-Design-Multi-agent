@@ -2,7 +2,7 @@
 
 ## Requirements
 
-1. Install the ns-3 prerequisites listed in the following [website] (https://www.nsnam.org/wiki/Installation). The ns-3 version we are using is ns-3.38
+1. Install the ns-3 prerequisites listed in the following [website](https://www.nsnam.org/wiki/Installation). The ns-3 version we are using is ns-3.38
 
 2. Boost C++ libraries
 
