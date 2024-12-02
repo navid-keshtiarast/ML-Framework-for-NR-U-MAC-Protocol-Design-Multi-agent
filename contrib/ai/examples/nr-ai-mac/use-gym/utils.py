@@ -237,37 +237,65 @@ if my_agent == 'central' :
     restored_policy = Policy.from_checkpoint(policy_checkpoint)
     restored_policy_weights = restored_policy.get_weights()
 
-    class RestoreWeightsCallback(DefaultCallbacks):
-        def on_algorithm_init(self, *, algorithm: "Algorithm", **kwargs) -> None:
-            algorithm.set_weights({"default_policy": restored_policy_weights})
+        class RestoreWeightsCallback(DefaultCallbacks):
+            def on_algorithm_init(self, *, algorithm: "Algorithm", **kwargs) -> None:
+                algorithm.set_weights({"default_policy": restored_policy_weights})
 
-        def on_episode_start(self, worker: RolloutWorker, base_env: BaseEnv,
+            def on_episode_start(self, worker: RolloutWorker, base_env: BaseEnv,
                                 policies: Dict[str, Policy],
                                 episode: Episode, **kwargs):
-            episode.user_data["mean_th"] = []
-            episode.user_data["reward"] = []
+                episode.user_data["mean_th"] = []
+                episode.user_data["reward_0"] = []
+                episode.user_data["reward_1"] = []
+                episode.user_data["reward_2"] = []
+                episode.user_data["reward_3"] = []
+                episode.user_data["reward_4"] = []
+                episode.user_data["reward_5"] = []
 
-            episode.custom_metrics["mean_ep_reward"] = 0
-            episode.custom_metrics["mean_ep_th"] = 0
+            def on_episode_step(self, worker: RolloutWorker, base_env: BaseEnv,
+                                episode: Episode, **kwargs):
+                mean_th = episode._last_infos[0]['mean_th']
+                reward_0 = episode._last_infos[0]['reward']
+                reward_1 = episode._last_infos[1]['reward']
+                reward_2 = episode._last_infos[2]['reward']
+                reward_3 = episode._last_infos[3]['reward']
+                reward_4 = episode._last_infos[4]['reward']
+                reward_5 = episode._last_infos[5]['reward']
+                episode.user_data["mean_th"].append(mean_th)
+                episode.user_data["reward_0"].append(reward_0)
+                episode.user_data["reward_1"].append(reward_1)
+                episode.user_data["reward_2"].append(reward_2)
+                episode.user_data["reward_3"].append(reward_3)
+                episode.user_data["reward_4"].append(reward_4)
+                episode.user_data["reward_5"].append(reward_5)
 
-        def on_episode_step(self, worker: RolloutWorker, base_env: BaseEnv,
-                            episode: Episode, **kwargs):
-            mean_th = episode._last_infos['agent0']['mean_th']
-            reward = episode._last_infos['agent0']['reward']
-            episode.user_data["mean_th"].append(mean_th)
-            episode.user_data["reward"].append(reward)
+            def on_episode_end(self, worker: RolloutWorker, base_env: BaseEnv,
+                            policies: Dict[str, Policy], episode: Episode,
+                            **kwargs):
+                mean_ep_th = np.mean(episode.user_data["mean_th"])
+                policy_reward = []
+                policy_reward.append(np.mean(episode.user_data["reward_0"]))
+                policy_reward.append(np.mean(episode.user_data["reward_1"]))
+                policy_reward.append(np.mean(episode.user_data["reward_2"]))
+                policy_reward.append(np.mean(episode.user_data["reward_3"]))
+                policy_reward.append(np.mean(episode.user_data["reward_4"]))
+                policy_reward.append(np.mean(episode.user_data["reward_5"]))
+                mean_ep_reward = 0
+                
+                for i in range(max_num_aps) :
+                    mean_ep_reward += policy_reward[i]
 
-        def on_episode_end(self, worker: RolloutWorker, base_env: BaseEnv,
-                        policies: Dict[str, Policy], episode: Episode,
-                        **kwargs):
-            mean_ep_th = np.mean(episode.user_data["mean_th"])
-            mean_ep_reward = np.mean(episode.user_data["reward"])
-            
-            episode.custom_metrics["ep_reward"] = mean_ep_reward
-            episode.custom_metrics["ep_th"] = mean_ep_th
+                episode.custom_metrics["policy_reward1"] = policy_reward[0]
+                episode.custom_metrics["policy_reward2"] = policy_reward[1]
+                episode.custom_metrics["policy_reward3"] = policy_reward[2]
+                episode.custom_metrics["policy_reward4"] = policy_reward[3]
+                episode.custom_metrics["policy_reward5"] = policy_reward[4]
+                episode.custom_metrics["policy_reward6"] = policy_reward[5]
+                episode.custom_metrics["mean_ep_reward"] = mean_ep_reward
+                episode.custom_metrics["mean_ep_th"] = mean_ep_th
 
-        def on_train_result(self, *, algorithm, result: dict, **kwargs):
-            if bool(result['env_runners']["custom_metrics"]) : 
+            def on_train_result(self, *, algorithm, result: dict, **kwargs):
+                if bool(result['env_runners']["custom_metrics"]) : 
                     ep_th = result['env_runners']["custom_metrics"]["mean_ep_th"]
                     ep_reward = result['env_runners']["custom_metrics"]["mean_ep_reward"]
 
@@ -316,111 +344,15 @@ elif my_agent == 'multi' :
                     )
             
             def on_episode_start(self, worker: RolloutWorker, base_env: BaseEnv,
-                                    policies: Dict[str, Policy],
-                                    episode: Episode, **kwargs):
-                    episode.user_data["mean_th"] = []
-                    episode.user_data["reward_0"] = []
-                    episode.user_data["reward_1"] = []
-                    episode.user_data["reward_2"] = []
-                    episode.user_data["reward_3"] = []
-                    episode.user_data["reward_4"] = []
-                    episode.user_data["reward_5"] = []
-
-            def on_episode_step(self, worker: RolloutWorker, base_env: BaseEnv,
+                                policies: Dict[str, Policy],
                                 episode: Episode, **kwargs):
-                mean_th = episode._last_infos[0]['mean_th']
-                reward_0 = episode._last_infos[0]['reward']
-                reward_1 = episode._last_infos[1]['reward']
-                reward_2 = episode._last_infos[2]['reward']
-                reward_3 = episode._last_infos[3]['reward']
-                reward_4 = episode._last_infos[4]['reward']
-                reward_5 = episode._last_infos[5]['reward']
-                episode.user_data["mean_th"].append(mean_th)
-                episode.user_data["reward_0"].append(reward_0)
-                episode.user_data["reward_1"].append(reward_1)
-                episode.user_data["reward_2"].append(reward_2)
-                episode.user_data["reward_3"].append(reward_3)
-                episode.user_data["reward_4"].append(reward_4)
-                episode.user_data["reward_5"].append(reward_5)
-
-            def on_episode_end(self, worker: RolloutWorker, base_env: BaseEnv,
-                            policies: Dict[str, Policy], episode: Episode,
-                            **kwargs):
-                mean_ep_th = np.mean(episode.user_data["mean_th"])
-                policy_reward = []
-                policy_reward.append(np.mean(episode.user_data["reward_0"]))
-                policy_reward.append(np.mean(episode.user_data["reward_1"]))
-                policy_reward.append(np.mean(episode.user_data["reward_2"]))
-                policy_reward.append(np.mean(episode.user_data["reward_3"]))
-                policy_reward.append(np.mean(episode.user_data["reward_4"]))
-                policy_reward.append(np.mean(episode.user_data["reward_5"]))
-                mean_ep_reward = 0
-                
-                for i in range(6) :
-                    mean_ep_reward += policy_reward[i]
-
-                episode.custom_metrics["policy_reward1"] = policy_reward[0]
-                episode.custom_metrics["policy_reward2"] = policy_reward[1]
-                episode.custom_metrics["policy_reward3"] = policy_reward[2]
-                episode.custom_metrics["policy_reward4"] = policy_reward[3]
-                episode.custom_metrics["policy_reward5"] = policy_reward[4]
-                episode.custom_metrics["policy_reward6"] = policy_reward[5]
-                episode.custom_metrics["ep_reward"] = mean_ep_reward
-                episode.custom_metrics["ep_th"] = mean_ep_th
-
-            def on_train_result(self, *, algorithm, result: dict, **kwargs):
-                if bool(result['env_runners']["custom_metrics"]) : 
-                        ep_th = result['env_runners']["custom_metrics"]["mean_ep_th"]
-                        ep_reward = result['env_runners']["custom_metrics"]["mean_ep_reward"]
-
-                        mean_ep_reward = np.mean(ep_reward)
-                        mean_ep_th = np.mean(ep_th)
-                        result["custom_metrics"]["mean_ep_th"] = mean_ep_th
-                        result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
-            
-        print("Running multi-agent environment with distributed execution")
-        ap_ids = [str(i) for i in range(max_num_aps)]
-        config = (PPOConfig()
-        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
-                model={'use_lstm' : my_lstm, 
-                       'max_seq_len' : my_max_seq_len,
-                      }
-                )
-        .environment(env="my_env")
-        .debugging(log_level='DEBUG')
-        .framework(args.framework)
-        .resources(num_gpus=0)
-        .env_runners(num_env_runners=5, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
-        .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
-        .multi_agent(
-            policies = {'0', '1', '2', '3', '4', '5'},
-            policy_mapping_fn = (lambda agent_id, episode, worker, **kw: str(agent_id)),
-            )
-        .callbacks(RestoreWeightsCallback)
-        .reporting(keep_per_episode_custom_metrics=True)
-        )
-
-    else :
-        # For centralized execution
-        policy_checkpoint = rllib_dir + '/policies/ap'
-
-        restored_policy = Policy.from_checkpoint(policy_checkpoint)
-        restored_policy_weights = restored_policy.get_weights()
-
-        class RestoreWeightsCallback(DefaultCallbacks):
-            def on_algorithm_init(self, *, algorithm: "Algorithm", **kwargs) -> None:
-                algorithm.set_weights({"ap": restored_policy_weights})
-
-            def on_episode_start(self, worker: RolloutWorker, base_env: BaseEnv,
-                                    policies: Dict[str, Policy],
-                                    episode: Episode, **kwargs):
-                    episode.user_data["mean_th"] = []
-                    episode.user_data["reward_0"] = []
-                    episode.user_data["reward_1"] = []
-                    episode.user_data["reward_2"] = []
-                    episode.user_data["reward_3"] = []
-                    episode.user_data["reward_4"] = []
-                    episode.user_data["reward_5"] = []
+                episode.user_data["mean_th"] = []
+                episode.user_data["reward_0"] = []
+                episode.user_data["reward_1"] = []
+                episode.user_data["reward_2"] = []
+                episode.user_data["reward_3"] = []
+                episode.user_data["reward_4"] = []
+                episode.user_data["reward_5"] = []
 
             def on_episode_step(self, worker: RolloutWorker, base_env: BaseEnv,
                                 episode: Episode, **kwargs):
@@ -461,13 +393,109 @@ elif my_agent == 'multi' :
                 episode.custom_metrics["policy_reward4"] = policy_reward[3]
                 episode.custom_metrics["policy_reward5"] = policy_reward[4]
                 episode.custom_metrics["policy_reward6"] = policy_reward[5]
-                episode.custom_metrics["ep_reward"] = mean_ep_reward
-                episode.custom_metrics["ep_th"] = mean_ep_th
+                episode.custom_metrics["mean_ep_reward"] = mean_ep_reward
+                episode.custom_metrics["mean_ep_th"] = mean_ep_th
 
             def on_train_result(self, *, algorithm, result: dict, **kwargs):
-                if bool(result["custom_metrics"]) : 
-                    ep_th = result["custom_metrics"]["ep_th_mean"]
-                    ep_reward = result["custom_metrics"]["ep_reward_mean"]
+                if bool(result['env_runners']["custom_metrics"]) : 
+                    ep_th = result['env_runners']["custom_metrics"]["mean_ep_th"]
+                    ep_reward = result['env_runners']["custom_metrics"]["mean_ep_reward"]
+
+                    mean_ep_reward = np.mean(ep_reward)
+                    mean_ep_th = np.mean(ep_th)
+                    result["custom_metrics"]["mean_ep_th"] = mean_ep_th
+                    result["custom_metrics"]["mean_ep_reward"] = mean_ep_reward
+        
+        print("Running multi-agent environment with distributed execution")
+        ap_ids = [str(i) for i in range(max_num_aps)]
+        config = (PPOConfig()
+        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+                model={'use_lstm' : my_lstm, 
+                       'max_seq_len' : my_max_seq_len,
+                      }
+                )
+        .environment(env="my_env")
+        .debugging(log_level='DEBUG')
+        .framework(args.framework)
+        .resources(num_gpus=0)
+        .env_runners(num_env_runners=5, num_envs_per_env_runner=1, num_cpus_per_env_runner=1, num_gpus_per_env_runner=0, remote_worker_envs=False)
+        .fault_tolerance(ignore_env_runner_failures=True, recreate_failed_env_runners=True, restart_failed_sub_environments=True)
+        .multi_agent(
+            policies = {'0', '1', '2', '3', '4', '5'},
+            policy_mapping_fn = (lambda agent_id, episode, worker, **kw: str(agent_id)),
+            )
+        .callbacks(RestoreWeightsCallback)
+        .reporting(keep_per_episode_custom_metrics=True)
+        )
+
+    else :
+        # For centralized execution
+        policy_checkpoint = rllib_dir + '/policies/ap'
+
+        restored_policy = Policy.from_checkpoint(policy_checkpoint)
+        restored_policy_weights = restored_policy.get_weights()
+
+        class RestoreWeightsCallback(DefaultCallbacks):
+            def on_algorithm_init(self, *, algorithm: "Algorithm", **kwargs) -> None:
+                algorithm.set_weights({"ap": restored_policy_weights})
+
+            def on_episode_start(self, worker: RolloutWorker, base_env: BaseEnv,
+                                policies: Dict[str, Policy],
+                                episode: Episode, **kwargs):
+                episode.user_data["mean_th"] = []
+                episode.user_data["reward_0"] = []
+                episode.user_data["reward_1"] = []
+                episode.user_data["reward_2"] = []
+                episode.user_data["reward_3"] = []
+                episode.user_data["reward_4"] = []
+                episode.user_data["reward_5"] = []
+
+            def on_episode_step(self, worker: RolloutWorker, base_env: BaseEnv,
+                                episode: Episode, **kwargs):
+                mean_th = episode._last_infos[0]['mean_th']
+                reward_0 = episode._last_infos[0]['reward']
+                reward_1 = episode._last_infos[1]['reward']
+                reward_2 = episode._last_infos[2]['reward']
+                reward_3 = episode._last_infos[3]['reward']
+                reward_4 = episode._last_infos[4]['reward']
+                reward_5 = episode._last_infos[5]['reward']
+                episode.user_data["mean_th"].append(mean_th)
+                episode.user_data["reward_0"].append(reward_0)
+                episode.user_data["reward_1"].append(reward_1)
+                episode.user_data["reward_2"].append(reward_2)
+                episode.user_data["reward_3"].append(reward_3)
+                episode.user_data["reward_4"].append(reward_4)
+                episode.user_data["reward_5"].append(reward_5)
+
+            def on_episode_end(self, worker: RolloutWorker, base_env: BaseEnv,
+                            policies: Dict[str, Policy], episode: Episode,
+                            **kwargs):
+                mean_ep_th = np.mean(episode.user_data["mean_th"])
+                policy_reward = []
+                policy_reward.append(np.mean(episode.user_data["reward_0"]))
+                policy_reward.append(np.mean(episode.user_data["reward_1"]))
+                policy_reward.append(np.mean(episode.user_data["reward_2"]))
+                policy_reward.append(np.mean(episode.user_data["reward_3"]))
+                policy_reward.append(np.mean(episode.user_data["reward_4"]))
+                policy_reward.append(np.mean(episode.user_data["reward_5"]))
+                mean_ep_reward = 0
+                
+                for i in range(max_num_aps) :
+                    mean_ep_reward += policy_reward[i]
+
+                episode.custom_metrics["policy_reward1"] = policy_reward[0]
+                episode.custom_metrics["policy_reward2"] = policy_reward[1]
+                episode.custom_metrics["policy_reward3"] = policy_reward[2]
+                episode.custom_metrics["policy_reward4"] = policy_reward[3]
+                episode.custom_metrics["policy_reward5"] = policy_reward[4]
+                episode.custom_metrics["policy_reward6"] = policy_reward[5]
+                episode.custom_metrics["mean_ep_reward"] = mean_ep_reward
+                episode.custom_metrics["mean_ep_th"] = mean_ep_th
+
+            def on_train_result(self, *, algorithm, result: dict, **kwargs):
+                if bool(result['env_runners']["custom_metrics"]) : 
+                    ep_th = result['env_runners']["custom_metrics"]["mean_ep_th"]
+                    ep_reward = result['env_runners']["custom_metrics"]["mean_ep_reward"]
 
                     mean_ep_reward = np.mean(ep_reward)
                     mean_ep_th = np.mean(ep_th)

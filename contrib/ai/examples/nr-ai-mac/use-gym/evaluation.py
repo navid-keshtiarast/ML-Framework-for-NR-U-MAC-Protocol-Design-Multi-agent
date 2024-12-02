@@ -274,7 +274,7 @@ if my_agent == 'central' :
             algorithm.set_weights({"default_policy": eval_policy_weights})
     
     config = (PPOConfig()
-    .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+    .training(gamma=0.9, lr=1e-3, train_batch_size = 5000, entropy_coeff = my_entropy_coeff, 
                 model={'use_lstm' : my_lstm, 
                        'max_seq_len' : my_max_seq_len,
                       }
@@ -314,7 +314,7 @@ elif my_agent == 'multi' :
         
         ap_ids = [str(i) for i in range(max_num_aps)]
         config = (PPOConfig()
-        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+        .training(gamma=0.9, lr=1e-3, train_batch_size = 5000, entropy_coeff = my_entropy_coeff, 
                 model={'use_lstm' : my_lstm, 
                        'max_seq_len' : my_max_seq_len,
                       }
@@ -345,7 +345,7 @@ elif my_agent == 'multi' :
                 algorithm.set_weights({"ap": eval_policy_weights})
 
         config = (PPOConfig()
-        .training(gamma=0.9, lr=1e-3, train_batch_size = 1000, entropy_coeff = my_entropy_coeff, 
+        .training(gamma=0.9, lr=1e-3, train_batch_size = 5000, entropy_coeff = my_entropy_coeff, 
                 model={'use_lstm' : my_lstm, 
                        'max_seq_len' : my_max_seq_len,
                       }
