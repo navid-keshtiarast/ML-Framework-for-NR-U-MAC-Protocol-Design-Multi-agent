@@ -49,9 +49,9 @@ parser.add_argument('--min_num_aps',
 parser.add_argument('--max_num_aps', 
                     type=int, default=6, help='set maximum number of APs')                      
 parser.add_argument('--alpha', 
-                    type=int, help='alpha argument for airtime in reward')
+                    type=float, help='alpha argument for airtime in reward')
 parser.add_argument('--beta', 
-                    type=int, help='beta argument for delay in reward')
+                    type=float, help='beta argument for delay in reward')
 parser.add_argument('--duration',
                     type=float, help='set simulation duration (seconds)')
 parser.add_argument('--udpLambda', 
