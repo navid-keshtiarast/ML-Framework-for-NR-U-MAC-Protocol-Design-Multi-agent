@@ -87,6 +87,8 @@ parser.add_argument("--local-mode",
                      action="store_true", help="Init Ray in local mode for easier debugging.")
 parser.add_argument("--isEvaluation",
                      action="store_true", help="This mode is used for evaluation")
+parser.add_argument("--fineTuning",
+                     action="store_true", help="This mode is used for evaluation")
 parser.add_argument('--outputDir',
                      type=str, help="Output directory")
 parser.add_argument('--rllibDir',
@@ -175,6 +177,10 @@ my_max_seq_len = 10
 if args.max_seq_len :
     my_max_seq_len = args.max_seq_len
 
+my_fineTuning = False
+if args.separate_agent_nns :
+    my_fineTuning = args.fineTuning
+
 my_output_dir = ""
 
 ray.shutdown()
@@ -211,6 +217,7 @@ sim_config = {
     'min_num_aps' : my_min_num_aps,
     'max_num_aps' : my_max_num_aps,
     'simRoundSet' : my_sim_seed_set,
+    'fineTuning' : my_fineTuning,
 }
 
 def env_creator(env_config):

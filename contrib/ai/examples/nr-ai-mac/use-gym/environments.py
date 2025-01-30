@@ -383,6 +383,7 @@ class CentralDecisionEnv (gym.Env):
         print('Number of APs : ',self.num_ap)
         self.reward_type = sim_config['reward_type']
         self.isEvaluation = sim_config['isEvaluation']
+        self.fineTuning = sim_config['fineTuning']
         self.new_udpLambda = sim_config['new_udpLambda']
         self.output_dir = sim_config['output_dir']
         self.alpha = sim_config['alpha']
@@ -1082,7 +1083,7 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                     self.observation[i]['new_deferTime'][detect_index[j]] = 0
         
         # For constantly changing ap_num
-        if self.isEvaluation != True and self.num_ap < self.max_num_aps:
+        if self.isEvaluation != True and self.fineTuning != True and self.num_ap < self.max_num_aps:
             temp = {}
             for i in range (self.max_num_aps) :
                 temp[i] = self.observation[self.random_order[i]].copy()

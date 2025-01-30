@@ -207,6 +207,7 @@ sim_config = {
     'min_num_aps' : my_min_num_aps,
     'max_num_aps' : my_max_num_aps,
     'simRoundSet' : my_sim_seed_set,
+    'fineTuning' : False,
 }
 
 
