@@ -1966,6 +1966,9 @@ main (int argc, char *argv[])
     cmd.AddValue ("outputDirectory",
                   "Output directory of ns3 result",
                    outputDirectory);                                 
+    cmd.AddValue ("baselineMode",
+                  "Is this an evaluation.",
+                   baselineMode); 
 
     cmd.Parse (argc, argv);
 
@@ -2513,7 +2516,7 @@ main (int argc, char *argv[])
     Simulator::Schedule (MilliSeconds(0), &GiveAirTime);
     Simulator::Schedule (MilliSeconds(0), &ChangeMacTypeAlt);
     Simulator::Schedule (MilliSeconds(0), &ScheduleNextStateRead);
-    Simulator::Schedule (MilliSeconds(0), &UpdateMacParameters, newGnbNodes);
+    Simulator::Schedule (MilliSeconds(0), &UpdateMacParameters, wifiApNodes, baselineMode);
 
     Simulator::Stop (Seconds (simTime));
 
