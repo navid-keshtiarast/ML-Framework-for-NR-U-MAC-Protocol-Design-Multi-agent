@@ -88,7 +88,7 @@ parser.add_argument("--local-mode",
 parser.add_argument("--isEvaluation",
                      action="store_true", help="This mode is used for evaluation")
 parser.add_argument("--fineTuning",
-                     action="store_true", help="This mode is used for evaluation")
+                     action="store_true", help="This mode is used for fineTuning")
 parser.add_argument('--outputDir',
                      type=str, help="Output directory")
 parser.add_argument('--rllibDir',
@@ -178,7 +178,7 @@ if args.max_seq_len :
     my_max_seq_len = args.max_seq_len
 
 my_fineTuning = False
-if args.separate_agent_nns :
+if args.fineTuning :
     my_fineTuning = args.fineTuning
 
 my_output_dir = ""

@@ -89,7 +89,8 @@ parser.add_argument("--isEvaluation",
                      action="store_true", help="This mode is used for evaluation")
 parser.add_argument('--entropy_coeff',
                      type=float, default=0.0, help="The rate of exploration entropy coefficient")
-
+parser.add_argument("--baseline_mode",
+                     action="store_true", help="Runs the simulation without taking care of the actions.")
 
 args = parser.parse_args()
 
@@ -171,6 +172,10 @@ my_max_seq_len = 10
 if args.max_seq_len :
     my_max_seq_len = args.max_seq_len
 
+my_baseline_mode = False
+if args.baseline_mode :
+    my_baseline_mode = args.baseline_mode
+
 my_output_dir = ""
 
 ray.shutdown()
@@ -193,6 +198,7 @@ ns3Settings = {
     'udpLambda5' : my_udpLambda[4],
     'udpLambda6' : my_udpLambda[5],
     'isEvaluation' : False,
+    'baselineMode' : my_baseline_mode,
     }
 
 sim_config = {

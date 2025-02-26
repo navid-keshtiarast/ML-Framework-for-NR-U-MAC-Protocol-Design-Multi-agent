@@ -1110,23 +1110,25 @@ ChangeMacTypeAlt()
 }
 
 void
-UpdateMacParameters (NodeContainer gNbNodes)
+UpdateMacParameters (NodeContainer gNbNodes, bool baselineMode)
 {
     // std::cout << "Debug UpdateMacParameters()" << std::endl;
-    uint32_t ipv4ifIndex = 1;
-    for (uint32_t i = 0; i < g_minCw.size(); i++)
+    if(!baselineMode)
     {
-        nr[i]->ChangeMcot(MilliSeconds (g_mcot[i]));
-        nr[i]->ChangeGnbTxPower(g_txPower[i]);
-        nr[i]->ChangeEdThreshold(g_edThreshold[i]);
-        nr[i]->ChangeBackoffType(g_backoffType[i]);
-        nr[i]->ChangeSlotTime(g_slotTime[i]);
-        nr[i]->ChangeDeferTime(MicroSeconds (g_deferTime[i]));
-        nr[i]->ChangeMinCw(g_minCw[i]);
-        
-        nr[i]->ChangeMcs(g_mcs[i]);
+        for (uint32_t i = 0; i < g_minCw.size(); i++)
+        {
+            nr[i]->ChangeMcot(MilliSeconds (g_mcot[i]));
+            nr[i]->ChangeGnbTxPower(g_txPower[i]);
+            nr[i]->ChangeEdThreshold(g_edThreshold[i]);
+            nr[i]->ChangeBackoffType(g_backoffType[i]);
+            nr[i]->ChangeSlotTime(g_slotTime[i]);
+            nr[i]->ChangeDeferTime(MicroSeconds (g_deferTime[i]));
+            nr[i]->ChangeMinCw(g_minCw[i]);
+            
+            nr[i]->ChangeMcs(g_mcs[i]);
+        }
+        Simulator::Schedule (g_timeStep, &UpdateMacParameters, gNbNodes, baselineMode);
     }
-    Simulator::Schedule (g_timeStep, &UpdateMacParameters, gNbNodes);
 }
 
 void
@@ -1212,6 +1214,7 @@ main (int argc, char *argv[])
     uint32_t timeStep = 100;
     bool isEvaluation = false;
     std::string outputDirectory = "";
+    bool baselineMode = false;
 
     uint32_t numWifiPairs = 0;
     uint32_t numNruPairs = numAgents;
