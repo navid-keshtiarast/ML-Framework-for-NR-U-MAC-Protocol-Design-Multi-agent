@@ -817,6 +817,7 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
         print('Number of APs : ',self.num_ap)
         self.reward_type = sim_config['reward_type']
         self.isEvaluation = sim_config['isEvaluation']
+        self.fineTuning = sim_config['fineTuning']
         self.new_udpLambda = sim_config['new_udpLambda']
         self.output_dir = sim_config['output_dir']
         self.alpha = sim_config['alpha']
