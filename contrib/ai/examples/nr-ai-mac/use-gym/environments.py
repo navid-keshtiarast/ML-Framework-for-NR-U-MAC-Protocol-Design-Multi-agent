@@ -506,7 +506,7 @@ class CentralDecisionEnv (gym.Env):
         return airtime/norm_factor
     
     def normalize_udpLambda(self, udpLambda) :
-        norm_factor = 0
+        norm_factor = 1
         mod_lambda_vector = np.minimum(self.observation['udpLambda'],self.norm_factor_limit())
         mod_udp_lambda = np.minimum(udpLambda,self.norm_factor_limit())
         for i in range (self.num_ap) :
@@ -1158,7 +1158,7 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
         return airtime/norm_factor
     
     def normalize_udpLambda(self, udpLambda, ap_index) :
-        norm_factor = 0
+        norm_factor = 1
         mod_lambda_vector = np.minimum(self.observation[ap_index]['udpLambda'],self.norm_factor_limit())
         mod_udp_lambda = np.minimum(udpLambda,self.norm_factor_limit())
         for i in range (self.max_num_aps) :
