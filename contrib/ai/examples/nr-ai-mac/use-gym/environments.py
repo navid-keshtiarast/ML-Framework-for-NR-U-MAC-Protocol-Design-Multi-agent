@@ -481,7 +481,7 @@ class CentralDecisionEnv (gym.Env):
                     sum_delay = 1
 
             for i in range(self.max_num_aps) :
-                self.reward += self.normalize_throughput(self.observation['throughput'][i])/self.normalize_udpLambda(self.observation['udpLambda'][i]) - alpha*self.normalize_delay(self.observation['airtime'][i])/sum_airTime - beta*self.normalize_delay(self.observation['delay'][i])/sum_delay
+                self.reward += self.normalize_throughput(self.observation['throughput'][i])/self.normalize_udpLambda(self.observation['udpLambda'][i])# - alpha*self.normalize_delay(self.observation['airtime'][i])/sum_airTime - beta*self.normalize_delay(self.observation['delay'][i])/sum_delay
 
         return self.reward
     
@@ -507,14 +507,32 @@ class CentralDecisionEnv (gym.Env):
     
     def normalize_udpLambda(self, udpLambda) :
         norm_factor = 0
-        for i in range (self.max_num_aps) :
-            norm_factor += self.observation['udpLambda'][i]
+        mod_lambda_vector = np.minimum(self.observation['udpLambda'],self.norm_factor_limit())
+        mod_udp_lambda = np.minimum(udpLambda,self.norm_factor_limit())
+        for i in range (self.num_ap) :
+            norm_factor += mod_lambda_vector[i]
 
-        if udpLambda/norm_factor <= 0 :
+        if mod_udp_lambda/norm_factor <= 0 :
             return 1
         else :
-            return udpLambda/norm_factor
+            return mod_udp_lambda/norm_factor
     
+    def norm_factor_limit (self) :
+        if self.num_ap == 2 :
+            lambda_limit = 2500
+        elif self.num_ap == 3 :
+            lambda_limit = 1600
+        elif self.num_ap == 4 :
+            lambda_limit = 1200
+        elif self.num_ap == 5 :
+            lambda_limit = 900
+        elif self.num_ap == 6 :
+            lambda_limit = 700
+        else :
+            lambda_limit = 5000
+        
+        return lambda_limit 
+
     def set_new_action(self, action_dict):
         # print("Debugging CentralEnv set_new_action()")
 
@@ -1139,14 +1157,33 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
         return airtime/norm_factor
     
     def normalize_udpLambda(self, udpLambda, ap_index) :
-        norm_factor = 1
+        norm_factor = 0
+        mod_lambda_vector = np.minimum(self.observation[ap_index]['udpLambda'],self.norm_factor_limit())
+        mod_udp_lambda = np.minimum(udpLambda,self.norm_factor_limit())
         for i in range (self.max_num_aps) :
-            norm_factor += self.observation[ap_index]['udpLambda'][i]
-        if udpLambda/norm_factor <= 0 :
+            norm_factor += mod_lambda_vector[i]
+        
+        if mod_udp_lambda/norm_factor <= 0 :
             return 1
         else :
-            return udpLambda/norm_factor
+            return mod_udp_lambda/norm_factor
     
+    def norm_factor_limit (self) :
+        if self.num_ap == 2 :
+            lambda_limit = 2500
+        elif self.num_ap == 3 :
+            lambda_limit = 1600
+        elif self.num_ap == 4 :
+            lambda_limit = 1200
+        elif self.num_ap == 5 :
+            lambda_limit = 900
+        elif self.num_ap == 6 :
+            lambda_limit = 700
+        else :
+            lambda_limit = 5000
+        
+        return lambda_limit 
+
     def get_reward (self, alpha=0.3, beta=0.3):
         # print("Debugging MultiAgentDecisionEnv get_reward()")
         self.reward = {}
@@ -1193,7 +1230,10 @@ class MultiAgentDecisionEnv (MultiAgentEnv):
                         sum_airTime = 1
                     if sum_delay <= 0 :
                         sum_delay = 1
-                self.reward[i] = self.normalize_throughput(self.observation[i]['throughput'][i])/self.normalize_udpLambda(self.observation[i]['udpLambda'][i],i) - alpha*self.normalize_airtime(self.observation[i]['airtime'][i])/sum_airTime - beta*self.normalize_delay(self.observation[i]['delay'][i])/sum_delay
+                if self.observation[i]['nodesNum'] <= 2 :
+                    self.reward[i] = self.normalize_throughput(self.observation[i]['throughput'][i])/self.normalize_udpLambda(self.observation[i]['udpLambda'][i],i)
+                else : 
+                    self.reward[i] = self.normalize_throughput(self.observation[i]['throughput'][i])/self.normalize_udpLambda(self.observation[i]['udpLambda'][i],i) - alpha*self.normalize_airtime(self.observation[i]['airtime'][i])/sum_airTime - beta*self.normalize_delay(self.observation[i]['delay'][i])/sum_delay
         
         # print("with reward : ", self.reward)
         
