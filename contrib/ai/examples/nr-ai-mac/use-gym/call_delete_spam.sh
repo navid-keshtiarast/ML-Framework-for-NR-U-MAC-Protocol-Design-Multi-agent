@@ -8,7 +8,7 @@ if [ ! -f "$SORT_SCRIPT" ]; then
 fi
 
 # Base directory
-BASE_DIR="/home/navid/ns-3.38/contrib/ai/examples/nr-ai-mac/use-gym/eval_results_delay"
+BASE_DIR= "" #"/home/navid/ns-3.38/contrib/ai/examples/nr-ai-mac/use-gym/eval_results_delay"
 
 # Define arrays for the different parts of the directory paths
 MODES=("CTCE" "CTDE" "DTDE")

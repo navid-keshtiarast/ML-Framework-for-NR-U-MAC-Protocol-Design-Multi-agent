@@ -1285,7 +1285,7 @@ main (int argc, char *argv[])
     double ccaThresholdSta = -62.0; //dBm Wifi
     std::string wifiStandard = "11ax";
     int frameAggregation = 0; //0 no agg. 1 MPDU max,2 MSDU max
-    uint32_t wifiMpdu = 0;
+    uint32_t wifiMpdu = 66;
     uint32_t wifiMsdu = 0;
     uint32_t wifiMinCw = 15;
     uint32_t wifiAifsn = 2;
@@ -1294,10 +1294,10 @@ main (int argc, char *argv[])
     uint32_t wifiMcs = 0;
 
     std::string gnbCamType = "ns3::NrCat4LbtAccessManager";
-    double lbtEDThreshold = -79.0;
+    double lbtEDThreshold = -62.0; //-62 intra NR-U and -72 Coex
     double lbtSlotTime = 9.0; //Microseconds
-    double lbtDeferTime = 16.0; //MicroSeconds
-    double lbtMcot = 5.0; //MilliSeconds
+    double lbtDeferTime = 40.0; //MicroSeconds
+    double lbtMcot = 8.0; //MilliSeconds
     std::string lbtBackoffType = "Binary";
     double cat2EDThreshold = -72.0; // dBm
     double cat3and4EDThreshold = -72.0; // dBm
@@ -1306,7 +1306,7 @@ main (int argc, char *argv[])
     uint32_t cat3CW = 15;
     uint32_t cat4RetryLimit = 0;
     uint32_t cat4MinCw = 15;
-    uint32_t cat4MaxCw = 1023;
+    uint32_t cat4MaxCw = 63;
     uint32_t cat4CwUpdateRule = NrCat4LbtAccessManager::ANY_NACK; //alternatives : NrCat4LbtAccessManager::ALL_NACKS, NrCat4LbtAccessManager::NACKS_10_PERCENT, NrCat4LbtAccessManager::NACKS_80_PERCENT 
     uint32_t cat4LinearBackoff = 3;
     double onoffChangeTime = 10.0;

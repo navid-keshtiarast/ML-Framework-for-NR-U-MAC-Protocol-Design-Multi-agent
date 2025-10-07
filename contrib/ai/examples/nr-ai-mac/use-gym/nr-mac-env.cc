@@ -185,15 +185,15 @@ NrMacTimeStepEnv::NrMacTimeStepEnv (uint32_t num_ap, uint32_t trafficType, std::
     m_new_packetSize[i] = m_packetSize[i];
 
     m_slotTime[i] = 9;
-    m_deferTime[i] = 16;
-    m_mcot[i] = 5;
+    m_deferTime[i] = 40;
+    m_mcot[i] = 8;
     m_backoffType[i] = 3;
     m_minCw[i] = 15;
     m_txPower[i] = 23;
     
     m_new_slotTime[i] = 9;
-    m_new_deferTime[i] = 16;
-    m_new_mcot[i] = 5;
+    m_new_deferTime[i] = 40;
+    m_new_mcot[i] = 8;
     m_new_backoffType[i] = 3;
     m_new_minCw[i] = 15;
     m_new_txPower[i] = 23;
